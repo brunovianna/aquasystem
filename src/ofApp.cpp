@@ -8,9 +8,9 @@ void ofApp::setup(){
     body.load("body.png");
 
     aguaStr = "agua";
-    h = 600;
-    w = 800;
-    ofSetWindowShape(w,h);
+    ofw = ofGetWindowWidth();
+    ofh = ofGetWindowHeight();
+
 
 }
 
@@ -26,11 +26,11 @@ void ofApp::draw(){
 
     ofBackground(ofColor::black);
 
-    body.draw(w/2, h-body.getWidth());
+    body.draw(ofw/2, ofh-body.getWidth());
     //body.draw(mouseX-(body.getWidth()/2), h-body.getWidth());
     if (ofGetFrameNum()%10==0) ps.addDropParticle();
 
-    canvas.grabScreen(0,0,w,h);
+    canvas.grabScreen(0,0,ofw,ofh);
     ps.run(canvasRef);
 
 }

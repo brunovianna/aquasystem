@@ -25,8 +25,8 @@ public:
     ofImage body;
     particleSystem ps;
 
-    int w;
-    int h;
+    int ofw;
+    int ofh;
 
     string aguaStr;
 
