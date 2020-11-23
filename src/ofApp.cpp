@@ -11,12 +11,27 @@ void ofApp::setup(){
     ofw = ofGetWindowWidth();
     ofh = ofGetWindowHeight();
 
-    //The start function returns the pipeline profile which the pipeline used to start the device
-    rs2::pipeline_profile profile = pipe.start();
+
+    //playback from file - uncomment below
+    //rs2::config cfg;
+    //cfg.enable_device_from_file("data/b.bag");
+    //pipe.start(cfg); //File will be opened in read mode at this point
+
+
+    //live cam -- uncomment below
+    pipe.start();
+
+    device = pipe.get_active_profile().get_device();
+
 
     // Each depth camera might have different units for depth pixels, so we get it here
     // Using the pipeline's profile, we can retrieve the device that the pipeline uses
-    depth_scale = get_depth_scale(profile.get_device());
+    depth_scale = get_depth_scale(device);
+
+    //playback from file - uncomment below
+    //rs2::playback playback = device.as<rs2::playback>();
+
+
 
 
     // filter settings
@@ -37,7 +52,16 @@ void ofApp::update(){
     rs2::align align_to(RS2_STREAM_COLOR);
 
 
-    auto frame_set = pipe.wait_for_frames();
+
+    //comment below for live cam
+    if (!pipe.poll_for_frames(&frame_set)) // Check if new frames are ready
+    {
+        return;
+    }
+
+
+    //uncomment below for live cam
+    //frame_set = pipe.wait_for_frames();
 
 
     rs2::frameset aligned_set = align_to.process(frame_set);
@@ -50,21 +74,22 @@ void ofApp::update(){
     //Only process if one of them is unavailable
     if (depth && cam)
     {
+
+        int depthWidth = cam.get_width();
+        int depthHeight = cam.get_height();
+        uint8_t *buff = (uint8_t*)cam.get_data();
+        camTex.loadData(buff, depthWidth, depthHeight, GL_RGB);
+
         remove_background(cam, depth, depth_scale,depth_clipping_distance_near, depth_clipping_distance_far);
 
 //        rs2::video_frame normalizedDepthFrame = _colorizer.process(depth);
-        uint8_t *depthBuff = (uint8_t*)cam.get_data();
-        int depthWidth = cam.get_width();
-        int depthHeight = cam.get_height();
-        camTex.loadData(depthBuff, depthWidth, depthHeight, GL_RGB);
 
+        buff = (uint8_t*)cam.get_data(); //now cam has bg removed
+        cv_color.setFromPixels(buff,depthWidth,depthHeight);
+        cv_grayscale = cv_color;
         // Find contours whose areas are betweeen 20 and 25000 pixels
         // "Find holes" is true, so we'll also get interior contours.
-        ofPixels cam_pixels;
-        camTex.readToPixels(cam_pixels);
-        ofxCvGrayscaleImage cv_grayscale;
-        cv_grayscale = cam_pixels;
-        contourFinder.findContours(cv_grayscale, 20, 25000, 10, true);
+        contourFinder.findContours(cv_grayscale, 2000, 1000000, 10, false);
 
 
     //    uint8_t *camBuff = (uint8_t*)cam.get_data();
@@ -88,10 +113,11 @@ void ofApp::draw(){
     ofImage& canvasRef = canvas;
 
     ofBackground(ofColor::black);
-    //camTex.draw(glm::vec3(0,0,0));
+    camTex.draw(0,0);
     //mask.draw(0,0);
     // Draw each blob individually from the blobs vector
     int numBlobs = contourFinder.nBlobs;
+    cout << "num blobs " << numBlobs;
         for (int i=0; i<numBlobs; i++){
             contourFinder.blobs[i].draw(0,0);
         }

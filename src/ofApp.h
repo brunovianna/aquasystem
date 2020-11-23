@@ -39,6 +39,7 @@ public:
     rs2::frame colored_depth;
     rs2::frame colored_filtered;
     rs2::threshold_filter thr_filter;
+    rs2::frameset frame_set;
 
 
 
@@ -55,8 +56,11 @@ public:
     float get_depth_scale(rs2::device dev);
 
     // Define a variable for controlling the distance to clip
-    float depth_clipping_distance_far = 3.f;
-    float depth_clipping_distance_near = 1.f;
+    float depth_clipping_distance_far = 0.5f;
+    float depth_clipping_distance_near = 0.3f;
+
+    ofxCvGrayscaleImage cv_grayscale;
+    ofxCvColorImage cv_color;
 
     ofxCvContourFinder		contourFinder;
 
