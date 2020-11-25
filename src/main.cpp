@@ -10,7 +10,7 @@ int main( ){
     mainSetting.setSize(1280, 720);
     mainSetting.setPosition(ofVec2f(0, 0));
     mainSetting.decorated = false;
-    mainSetting.windowMode = OF_FULLSCREEN;
+    mainSetting.windowMode = OF_WINDOW;
     //mainSetting.numSamples = 8;
     ofCreateWindow(mainSetting);
 
