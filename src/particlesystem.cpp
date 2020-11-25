@@ -28,7 +28,9 @@ void particleSystem::run(vector <ofPolyline> blobs){
       int result = dropParticles[i].run(blobs);
       if (dropParticles[i].isDead()) {
           if (dropParticles[i].touch) {
-            addSplashParticle(dropParticles[i].touch_point);
+              int splashes_amount = (int)ofRandom(4);
+              for (int j=0;j<splashes_amount;j++)
+                addSplashParticle(dropParticles[i].touch_point);
           }
         dropParticles.erase(dropParticles.begin()+i); // needs to use an iterator here
       }

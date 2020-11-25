@@ -15,7 +15,7 @@ public:
     bool isDead();
     int lifetime;
     int side;
-    int speed;
+    float speed;
 
 };
 
