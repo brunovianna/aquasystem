@@ -59,7 +59,7 @@ public:
     float get_depth_scale(rs2::device dev);
 
     // Define a variable for controlling the distance to clip
-    float depth_clipping_distance_far = 0.5f;
+    float depth_clipping_distance_far = 0.9f;
     float depth_clipping_distance_near = 0.3f;
 
     ofxCvGrayscaleImage cv_grayscale;

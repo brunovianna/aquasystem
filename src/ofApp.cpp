@@ -38,7 +38,7 @@ void ofApp::setup(){
 
     _colorizer.set_option(RS2_OPTION_MAX_DISTANCE, depth_clipping_distance_far);
     _colorizer.set_option(RS2_OPTION_MIN_DISTANCE, depth_clipping_distance_near);
-    _colorizer.set_option(RS2_OPTION_COLOR_SCHEME, 1);
+    _colorizer.set_option(RS2_OPTION_COLOR_SCHEME, 2);
 
 
 }
@@ -64,6 +64,8 @@ void ofApp::update(){
 
     rs2::depth_frame  depth = frame_set.get_depth_frame();
     rs2::video_frame  cam = frame_set.get_color_frame();
+    depth = thr_filter.process(depth);
+    rs2::video_frame depth_image = _colorizer.colorize(depth);
 
 
     //auto depth = frames.get_depth_frame();
@@ -72,14 +74,14 @@ void ofApp::update(){
     if (depth && cam)
     {
 
-        int depthWidth = cam.get_width();
-        int depthHeight = cam.get_height();
-        uint8_t *buff = (uint8_t*)cam.get_data();
-        camTex.loadData(buff, depthWidth, depthHeight, GL_RGB);
+        int depthWidth = depth_image.get_width();
+        int depthHeight = depth_image.get_height();
+        uint8_t *buff = (uint8_t*)depth_image.get_data();
+        depthTex.loadData(buff, depthWidth, depthHeight, GL_RGB);
 
-        remove_background(cam, depth, depth_scale,depth_clipping_distance_near, depth_clipping_distance_far);
+        //remove_background(cam, depth, depth_scale,depth_clipping_distance_near, depth_clipping_distance_far);
 
-        buff = (uint8_t*)cam.get_data(); //now cam has bg removed
+        //buff = (uint8_t*)cam.get_data(); //now cam has bg removed
         cv_color.setFromPixels(buff,depthWidth,depthHeight);
         cv_grayscale = cv_color;
         // Find contours whose areas are betweeen 20 and 25000 pixels
@@ -98,18 +100,19 @@ void ofApp::update(){
 void ofApp::draw(){
 
     ofBackground(ofColor::black);
-    camTex.draw(0,0);
+    depthTex.draw(0,0);
 
     vector <ofPolyline> blobs;
 
     for (int i=0; i<contourFinder.nBlobs; i++){
         ofPolyline blob(contourFinder.blobs[i].pts);
+        //blob.simplify();
         blobs.push_back(blob);
         blob.draw();
     }
 
 
-    if (ofGetFrameNum()%10==0) ps.addDropParticle();
+    if (ofGetFrameNum()%2==0) ps.addDropParticle();
 
     ps.run(blobs);
 

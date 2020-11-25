@@ -25,9 +25,9 @@ void particleSystem::run(vector <ofPolyline> blobs){
         dropParticles.erase(dropParticles.begin()+i); // needs to use an iterator here
       }
         //for debugging
-        else {
-          roboto32.drawString(std::to_string(i),dropParticles[i].position.x,dropParticles[i].position.y);
-        }
+//        else {
+//          roboto32.drawString(std::to_string(i),dropParticles[i].position.x,dropParticles[i].position.y);
+//        }
       if (result==1) {
           //splash and slide
       }

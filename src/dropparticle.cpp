@@ -11,8 +11,8 @@ dropParticle::dropParticle():particle()
 dropParticle::dropParticle(glm::vec2 p) {
 
     position = p;
-    velocity = glm::vec2(1.5, ofRandom(5.0,6.0));
-    acceleration = glm::vec2 (0,0.005);
+    velocity = glm::vec2(ofRandom(5.0,6.0), 20. );
+    acceleration = glm::vec2 (0,0.01);
     ofw = ofGetWindowWidth();
     ofh = ofGetWindowHeight();
     reddish = ofColor(106,0,0);
@@ -58,7 +58,7 @@ void dropParticle::display(){
         ofSetColor(ofColor::lightGray);
         float dropHead = 2.5;
         ofDrawEllipse(position.x, position.y, dropHead,dropHead*1.5);
-        float dropLength = 10;
+        float dropLength = 3;
         glm::vec2 dropStart  ((position.x-dropLength*velocity.x), (position.y-dropLength*velocity.y));
         ofDrawLine (dropStart.x, dropStart.y, position.x, position.y); //todo : gradient from white in the bottom to gray in the top
     }
