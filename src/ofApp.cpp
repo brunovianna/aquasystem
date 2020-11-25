@@ -1,6 +1,6 @@
 #include "ofApp.h"
 
-
+rs2::align align_me  = rs2::align(RS2_STREAM_COLOR);
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -22,7 +22,6 @@ void ofApp::setup(){
     pipe.start();
 
     device = pipe.get_active_profile().get_device();
-
 
     // Each depth camera might have different units for depth pixels, so we get it here
     // Using the pipeline's profile, we can retrieve the device that the pipeline uses
@@ -49,7 +48,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 
-    rs2::align align_to(RS2_STREAM_COLOR);
+
 
 
 
@@ -63,8 +62,8 @@ void ofApp::update(){
     //uncomment below for live cam
     //frame_set = pipe.wait_for_frames();
 
-
-    rs2::frameset aligned_set = align_to.process(frame_set);
+    //gave up trying to align. couldn't declare a global
+    rs2::frameset aligned_set = align_me.process(frame_set);
     rs2::depth_frame  depth = aligned_set.get_depth_frame();
     rs2::video_frame  cam = aligned_set.get_color_frame();
 
