@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "particle.h"
 #include "dropparticle.h"
+#include "ofxOpenCv.h"
 
 class particleSystem
 {
@@ -14,7 +15,7 @@ public:
 
 
     void addDropParticle();
-    void run(ofImage& i);
+    void run(vector <ofPolyline> blobs);
     int ofw;
     int ofh;
 

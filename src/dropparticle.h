@@ -3,8 +3,7 @@
 #pragma once
 #include "ofMain.h"
 #include "particle.h"
-
-
+#include "ofxOpenCv.h"
 
 class dropParticle : public particle
 {
@@ -12,12 +11,12 @@ public:
     dropParticle();
     dropParticle(glm::vec2 position);
     void display();
-    int run(ofImage& canvasRef);
-    int update(ofImage& canvasRef);
+    int run(vector <ofPolyline> blobs);
+    int update(vector <ofPolyline> blobs);
     bool isDead();
-    bool dead;
+    bool dead, touch;
     ofColor reddish;
-
+    glm::vec2 touch_point;
 };
 
 #endif // DROPPARTICLE_H

@@ -14,13 +14,13 @@ void particleSystem::addDropParticle() {
 
 }
 
-void particleSystem::run(ofImage& canvasRef) {
+void particleSystem::run(vector <ofPolyline> blobs){
     //println(particles.size());
     for (int i = dropParticles.size()-1; i >= 0; i--) {
 
     //returns status -- 0 ok, 1 touched body, 2 touched ground
 
-      int result = dropParticles[i].run(canvasRef);
+      int result = dropParticles[i].run(blobs);
       if (dropParticles[i].isDead()) {
         dropParticles.erase(dropParticles.begin()+i); // needs to use an iterator here
       }

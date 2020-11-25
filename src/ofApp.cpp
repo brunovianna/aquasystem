@@ -3,8 +3,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    ofSetFrameRate(60);
-    body.load("body.png");
+    ofSetFrameRate(30);
+
 
     aguaStr = "agua";
     ofw = ofGetWindowWidth();
@@ -40,7 +40,6 @@ void ofApp::setup(){
     _colorizer.set_option(RS2_OPTION_MIN_DISTANCE, depth_clipping_distance_near);
     _colorizer.set_option(RS2_OPTION_COLOR_SCHEME, 1);
 
-    mask.allocate(1280, 720, OF_IMAGE_GRAYSCALE);
 
 }
 
@@ -80,8 +79,6 @@ void ofApp::update(){
 
         remove_background(cam, depth, depth_scale,depth_clipping_distance_near, depth_clipping_distance_far);
 
-//        rs2::video_frame normalizedDepthFrame = _colorizer.process(depth);
-
         buff = (uint8_t*)cam.get_data(); //now cam has bg removed
         cv_color.setFromPixels(buff,depthWidth,depthHeight);
         cv_grayscale = cv_color;
@@ -90,14 +87,6 @@ void ofApp::update(){
         contourFinder.findContours(cv_grayscale, 2000, 1000000, 10, false);
 
 
-    //    uint8_t *camBuff = (uint8_t*)cam.get_data();
-    //    int camWidth = cam.get_width();
-    //    int camHeight = cam.get_height();
-    //    camTex.loadData(camBuff, camWidth, camHeight, GL_RGB);
-
-//        ofImage& maskRef = mask;
-
-        //setMaskFromDepth(maskRef, depth);
 
     }
 
@@ -107,25 +96,22 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    ofImage canvas;
-    ofImage& canvasRef = canvas;
 
     ofBackground(ofColor::black);
     camTex.draw(0,0);
-    //mask.draw(0,0);
-    // Draw each blob individually from the blobs vector
-    int numBlobs = contourFinder.nBlobs;
-    cout << "num blobs " << numBlobs;
-        for (int i=0; i<numBlobs; i++){
-            contourFinder.blobs[i].draw(0,0);
-        }
 
-    body.draw(ofw/2, ofh-body.getWidth());
-    //body.draw(mouseX-(body.getWidth()/2), h-body.getWidth());
+    vector <ofPolyline> blobs;
+
+    for (int i=0; i<contourFinder.nBlobs; i++){
+        ofPolyline blob(contourFinder.blobs[i].pts);
+        blobs.push_back(blob);
+        blob.draw();
+    }
+
+
     if (ofGetFrameNum()%10==0) ps.addDropParticle();
 
-    canvas.grabScreen(0,0,ofw,ofh);
-    ps.run(canvasRef);
+    ps.run(blobs);
 
 }
 

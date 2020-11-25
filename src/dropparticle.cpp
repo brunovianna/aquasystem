@@ -17,55 +17,51 @@ dropParticle::dropParticle(glm::vec2 p) {
     ofh = ofGetWindowHeight();
     reddish = ofColor(106,0,0);
     dead = false;
+    touch = false;
+    touch_point = glm::vec2(-1.,-1.);
 
 
 }
 
-int dropParticle::run(ofImage& canvasRef) {
+int dropParticle::run(vector <ofPolyline> blobs) {
 
-    int result = update(canvasRef);
+    int result = update(blobs);
     if (!dead) display();
     return  result;;
 }
 
-int dropParticle::update(ofImage& canvasRef) {
+int dropParticle::update(vector <ofPolyline> blobs) {
     //returns status -- 0 ok, 1 touched body, 2 touched ground
 
     int result = 0;
     velocity += acceleration;
     position += velocity;
 
-    ofPixels pixels = canvasRef.getPixels();
-
-    int pixelIndex = int(position.y)*ofw*4+int(position.x)*4;
-        //BGRA
-        if ((pixelIndex >=0) && (pixelIndex < ofw*ofh*4)) {
-          if ((pixels[pixelIndex]==reddish.b)&&(pixels[pixelIndex+1]==reddish.g)&&(pixels[pixelIndex+2]==reddish.r)) {
+    for (ofPolyline blob: blobs) {
+        if (blob.inside(ofPoint(position))) {
             result = 1;
-            dead = true;
-          }
-        } else {
-          if (position.y > ofw) {
-            if (ofRandom(10)>6) {
-              // TODO make word
-                result = 2;
-              //ps.addWordParticle(position);
-              dead = true;
-            }
-          }
+            touch = true;
+            touch_point = blob.getClosestPoint(ofPoint(position));
         }
+    }
+
 
     return result;
 }
 void dropParticle::display(){
 
-    ofSetColor(ofColor::lightGray);
-    float dropHead = 2.5;
-    ofDrawEllipse(position.x, position.y, dropHead,dropHead*1.5);
-    float dropLength = 10;
-    glm::vec2 dropStart  ((position.x-dropLength*velocity.x), (position.y-dropLength*velocity.y));
-    ofDrawLine (dropStart.x, dropStart.y, position.x, position.y); //todo : gradient from white in the bottom to gray in the top
-
+    if (touch) {
+        ofSetColor(ofColor::red);
+        ofDrawCircle(touch_point,2);
+        dead = true;
+    } else {
+        ofSetColor(ofColor::lightGray);
+        float dropHead = 2.5;
+        ofDrawEllipse(position.x, position.y, dropHead,dropHead*1.5);
+        float dropLength = 10;
+        glm::vec2 dropStart  ((position.x-dropLength*velocity.x), (position.y-dropLength*velocity.y));
+        ofDrawLine (dropStart.x, dropStart.y, position.x, position.y); //todo : gradient from white in the bottom to gray in the top
+    }
 }
 
 bool dropParticle::isDead() {

@@ -24,7 +24,7 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-    ofImage body;
+
     particleSystem ps;
 
     int ofw;
@@ -47,7 +47,7 @@ public:
 
 
 
-    ofImage mask;
+
     ofTexture depthTex;
     ofTexture camTex;
 
