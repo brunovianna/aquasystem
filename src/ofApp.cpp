@@ -1,6 +1,5 @@
 #include "ofApp.h"
 
-rs2::align align_me  = rs2::align(RS2_STREAM_COLOR);
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -62,10 +61,10 @@ void ofApp::update(){
     //uncomment below for live cam
     //frame_set = pipe.wait_for_frames();
 
-    //gave up trying to align. couldn't declare a global
-    rs2::frameset aligned_set = align_me.process(frame_set);
-    rs2::depth_frame  depth = aligned_set.get_depth_frame();
-    rs2::video_frame  cam = aligned_set.get_color_frame();
+
+
+    rs2::depth_frame  depth = frame_set.get_depth_frame();
+    rs2::video_frame  cam = frame_set.get_color_frame();
 
 
     //auto depth = frames.get_depth_frame();

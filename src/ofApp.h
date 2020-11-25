@@ -34,7 +34,7 @@ public:
 
 
 
-    //const rs2::align align	( 	rs2_stream  	align_to	);
+
     rs2::pipeline pipe;
     rs2::device device;
     rs2::colorizer color_map;
@@ -69,4 +69,3 @@ public:
 
 };
 
-extern rs2::align align_me;
