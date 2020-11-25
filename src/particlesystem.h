@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "particle.h"
 #include "dropparticle.h"
+#include "splashparticle.h"
 #include "ofxOpenCv.h"
 
 class particleSystem
@@ -12,9 +13,11 @@ public:
     particleSystem();
 
     std::vector < dropParticle > dropParticles;
+    std::vector < splashParticle > splashParticles;
 
 
     void addDropParticle();
+    void addSplashParticle(glm::vec2 tp);
     void run(vector <ofPolyline> blobs);
     int ofw;
     int ofh;

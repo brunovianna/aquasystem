@@ -1,12 +1,6 @@
 #include "dropparticle.h"
 
 
-dropParticle::dropParticle():particle()
-{
-    reddish = ofColor(128,0,0);
-    dead = false;
-
-}
 
 dropParticle::dropParticle(glm::vec2 p) {
 
@@ -15,7 +9,7 @@ dropParticle::dropParticle(glm::vec2 p) {
     acceleration = glm::vec2 (0,0.01);
     ofw = ofGetWindowWidth();
     ofh = ofGetWindowHeight();
-    reddish = ofColor(106,0,0);
+
     dead = false;
     touch = false;
     touch_point = glm::vec2(-1.,-1.);

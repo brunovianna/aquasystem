@@ -11,8 +11,13 @@ particleSystem::particleSystem()
 void particleSystem::addDropParticle() {
     dropParticle dp(glm::vec2 (ofRandom(ofw),-10));
     dropParticles.push_back(dp);
-
 }
+
+void particleSystem::addSplashParticle(glm::vec2 touch_point) {
+    splashParticle sp(touch_point);
+    splashParticles.push_back(sp);
+}
+
 
 void particleSystem::run(vector <ofPolyline> blobs){
     //println(particles.size());
@@ -22,15 +27,16 @@ void particleSystem::run(vector <ofPolyline> blobs){
 
       int result = dropParticles[i].run(blobs);
       if (dropParticles[i].isDead()) {
+          if (dropParticles[i].touch) {
+            addSplashParticle(dropParticles[i].touch_point);
+          }
         dropParticles.erase(dropParticles.begin()+i); // needs to use an iterator here
-      }
-        //for debugging
-//        else {
-//          roboto32.drawString(std::to_string(i),dropParticles[i].position.x,dropParticles[i].position.y);
-//        }
-      if (result==1) {
-          //splash and slide
       }
     }
 
+    for (int i = splashParticles.size()-1; i >= 0; i--) {
+        splashParticles[i].run();
+        if (splashParticles[i].isDead())
+            splashParticles.erase(splashParticles.begin()+i);
+    }
 }

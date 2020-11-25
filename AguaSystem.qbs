@@ -18,6 +18,8 @@ Project{
             "src/particle.h",
             "src/particlesystem.cpp",
             "src/particlesystem.h",
+            "src/splashparticle.cpp",
+            "src/splashparticle.h",
             'src/main.cpp',
             'src/ofApp.cpp',
             'src/ofApp.h',

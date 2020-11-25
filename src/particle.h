@@ -20,6 +20,8 @@ public:
     int ofh;
     int ofw;
 
+    bool dead;
+
 
 };
 

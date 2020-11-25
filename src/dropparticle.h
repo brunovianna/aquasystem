@@ -8,14 +8,13 @@
 class dropParticle : public particle
 {
 public:
-    dropParticle();
+
     dropParticle(glm::vec2 position);
     void display();
     int run(vector <ofPolyline> blobs);
     int update(vector <ofPolyline> blobs);
     bool isDead();
-    bool dead, touch;
-    ofColor reddish;
+    bool touch;
     glm::vec2 touch_point;
 };
 

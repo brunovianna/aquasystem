@@ -51,12 +51,7 @@ public:
     ofTexture depthTex;
     ofTexture camTex;
 
-    void setMaskFromDepth(ofImage& mask, rs2::depth_frame depth);
 
-    void remove_background(rs2::video_frame& other, const rs2::depth_frame& depth_frame, float depth_scale,  float near, float far);
-
-    float depth_scale;
-    float get_depth_scale(rs2::device dev);
 
     // Define a variable for controlling the distance to clip
     float depth_clipping_distance_far = 0.9f;
