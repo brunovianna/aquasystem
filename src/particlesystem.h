@@ -5,6 +5,7 @@
 #include "particle.h"
 #include "dropparticle.h"
 #include "splashparticle.h"
+#include "wordparticle.h"
 #include "ofxOpenCv.h"
 
 class particleSystem
@@ -14,15 +15,18 @@ public:
 
     std::vector < dropParticle > dropParticles;
     std::vector < splashParticle > splashParticles;
+    std::vector < wordParticle > wordParticles;
 
 
     void addDropParticle();
     void addSplashParticle(glm::vec2 tp);
+    void addWordParticle(float x);
     void run(vector <ofPolyline> blobs);
     int ofw;
     int ofh;
 
-    ofTrueTypeFont	roboto32;
+    ofTrueTypeFont	roboto;
+    string aguaText;
 
 };
 

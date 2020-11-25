@@ -5,7 +5,8 @@ particleSystem::particleSystem()
 {
     ofh = ofGetHeight();
     ofw = ofGetWidth();
-    roboto32.load("Roboto-Medium.ttf",32,true,true);
+    roboto.load("Roboto-Medium.ttf",32,true,true);
+    aguaText = "agua";
 }
 
 void particleSystem::addDropParticle() {
@@ -18,6 +19,10 @@ void particleSystem::addSplashParticle(glm::vec2 touch_point) {
     splashParticles.push_back(sp);
 }
 
+void particleSystem::addWordParticle(float x) {
+    wordParticle wp(x,roboto,aguaText);
+    wordParticles.push_back(wp);
+}
 
 void particleSystem::run(vector <ofPolyline> blobs){
     //println(particles.size());
@@ -25,12 +30,16 @@ void particleSystem::run(vector <ofPolyline> blobs){
 
     //returns status -- 0 ok, 1 touched body, 2 touched ground
 
-      int result = dropParticles[i].run(blobs);
+      dropParticles[i].run(blobs);
       if (dropParticles[i].isDead()) {
           if (dropParticles[i].touch) {
               int splashes_amount = (int)ofRandom(4);
               for (int j=0;j<splashes_amount;j++)
                 addSplashParticle(dropParticles[i].touch_point);
+          } else {
+              if (dropParticles[i].ground) {
+                  addWordParticle(dropParticles[i].position.x);
+              }
           }
         dropParticles.erase(dropParticles.begin()+i); // needs to use an iterator here
       }
@@ -41,4 +50,11 @@ void particleSystem::run(vector <ofPolyline> blobs){
         if (splashParticles[i].isDead())
             splashParticles.erase(splashParticles.begin()+i);
     }
+
+    for (int i = wordParticles.size()-1; i >= 0; i--) {
+        wordParticles[i].run();
+        if (wordParticles[i].isDead())
+            wordParticles.erase(wordParticles.begin()+i);
+    }
+
 }

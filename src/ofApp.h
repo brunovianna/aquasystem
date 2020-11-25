@@ -30,11 +30,6 @@ public:
     int ofw;
     int ofh;
 
-    string aguaStr;
-
-
-
-
     rs2::pipeline pipe;
     rs2::device device;
     rs2::colorizer color_map;

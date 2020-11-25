@@ -5,11 +5,11 @@
 void ofApp::setup(){
     ofSetFrameRate(30);
 
-
-    aguaStr = "agua";
     ofw = ofGetWindowWidth();
     ofh = ofGetWindowHeight();
 
+
+    ofTrueTypeFont::setGlobalDpi(72);
 
     //playback from file - uncomment below
     //rs2::config cfg;
@@ -99,7 +99,8 @@ void ofApp::draw(){
     }
 
 
-    if (ofGetFrameNum()%2==0) ps.addDropParticle();
+   // if (ofGetFrameNum()%2==0)
+    ps.addDropParticle();
 
     ps.run(blobs);
 

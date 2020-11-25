@@ -11,10 +11,10 @@ public:
 
     dropParticle(glm::vec2 position);
     void display();
-    int run(vector <ofPolyline> blobs);
-    int update(vector <ofPolyline> blobs);
+    void run(vector <ofPolyline> blobs);
+    void update(vector <ofPolyline> blobs);
     bool isDead();
-    bool touch;
+    bool touch, ground;
     glm::vec2 touch_point;
 };
 

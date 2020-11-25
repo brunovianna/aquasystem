@@ -12,50 +12,45 @@ dropParticle::dropParticle(glm::vec2 p) {
 
     dead = false;
     touch = false;
+    ground = false;
     touch_point = glm::vec2(-1.,-1.);
 
 
 }
 
-int dropParticle::run(vector <ofPolyline> blobs) {
+void dropParticle::run(vector <ofPolyline> blobs) {
 
-    int result = update(blobs);
+    update(blobs);
     if (!dead) display();
-    return  result;;
 }
 
-int dropParticle::update(vector <ofPolyline> blobs) {
-    //returns status -- 0 ok, 1 touched body, 2 touched ground
+void dropParticle::update(vector <ofPolyline> blobs) {
 
-    int result = 0;
     velocity += acceleration;
     position += velocity;
 
-    for (ofPolyline blob: blobs) {
-        if (blob.inside(ofPoint(position))) {
-            result = 1;
-            touch = true;
-            touch_point = blob.getClosestPoint(ofPoint(position));
+    if (position.y > ofh) {
+        dead = true;
+        ground = true;
+    } else {
+        for (ofPolyline blob: blobs) {
+            if (blob.inside(ofPoint(position))) {
+                dead = true;
+                touch = true;
+                touch_point = blob.getClosestPoint(ofPoint(position));
+            }
         }
     }
 
-
-    return result;
 }
 void dropParticle::display(){
 
-    if (touch) {
-        ofSetColor(ofColor::red);
-        ofDrawCircle(touch_point,2);
-        dead = true;
-    } else {
-        ofSetColor(ofColor::lightGray);
-        float dropHead = 2.5;
-        ofDrawEllipse(position.x, position.y, dropHead,dropHead*1.5);
-        float dropLength = 3;
-        glm::vec2 dropStart  ((position.x-dropLength*velocity.x), (position.y-dropLength*velocity.y));
-        ofDrawLine (dropStart.x, dropStart.y, position.x, position.y); //todo : gradient from white in the bottom to gray in the top
-    }
+    ofSetColor(ofColor::lightGray);
+    float dropHead = 2.5;
+    ofDrawEllipse(position.x, position.y, dropHead,dropHead*1.5);
+    float dropLength = 3;
+    glm::vec2 dropStart  ((position.x-dropLength*velocity.x), (position.y-dropLength*velocity.y));
+    ofDrawLine (dropStart.x, dropStart.y, position.x, position.y); //todo : gradient from white in the bottom to gray in the top
 }
 
 bool dropParticle::isDead() {
