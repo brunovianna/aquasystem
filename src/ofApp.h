@@ -51,11 +51,11 @@ public:
     ofxCvColorImage cv_color;
 
     ofxCvContourFinder		contourFinder;
+    vector <ofPolyline> blobs;
 
-    vector <ofPolyline>                  people;
+
     ofxBox2d                             box2d;
     vector <shared_ptr<ofxBox2dCircle>>  circles;
-    //vector <shared_ptr<ofxBox2dEdge>>    edges;
+    vector <shared_ptr<ofxBox2dPolygon>>    people;
 
 };
-

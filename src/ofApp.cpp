@@ -35,7 +35,7 @@ void ofApp::setup(){
     box2d.init();
     box2d.setGravity(0, 30);
     box2d.createGround();
-    box2d.setFPS(30.0);
+    box2d.setFPS(15.0);
 
 }
 
@@ -84,6 +84,25 @@ void ofApp::update(){
     }
 
 
+    blobs.clear();
+    people.clear();
+
+    for (int i=0; i<contourFinder.nBlobs; i++){
+        ofPolyline blob(contourFinder.blobs[i].pts);
+        //blob.simplify();
+        blobs.push_back(blob);
+        //blob.draw();
+
+        auto poly = std::make_shared<ofxBox2dPolygon>();
+        poly->addVertices(contourFinder.blobs[i].pts);
+        //no density, bounce, friction
+        poly->setPhysics(0.0, 0.0, 0.0);
+        poly->triangulate();
+        poly->create(box2d.getWorld());
+        people.push_back(poly);
+    }
+
+
     if ((int)ofRandom(0, 10) == 0) {
             auto c = make_shared<ofxBox2dCircle>();
 
@@ -93,7 +112,7 @@ void ofApp::update(){
             circles.push_back(c);
         }
 
-
+        box2d.update();
 }
 
 //--------------------------------------------------------------
@@ -102,20 +121,29 @@ void ofApp::draw(){
     ofBackground(ofColor::black);
     depthTex.draw(0,0);
 
-    vector <ofPolyline> blobs;
-
-    for (int i=0; i<contourFinder.nBlobs; i++){
-        ofPolyline blob(contourFinder.blobs[i].pts);
-        //blob.simplify();
-        blobs.push_back(blob);
-        blob.draw();
-    }
 
 
    // if (ofGetFrameNum()%2==0)
     ps.addDropParticle();
 
+    for(auto &person : people) {
+      ofFill();
+      ofSetHexColor(0x7777a7);
+      person->draw();
+    }
+    ofSetHexColor(0xbbbbbb);
+    for (auto blob: blobs) blob.draw();
+
     ps.run(blobs);
+
+
+    for(auto &circle : circles) {
+      ofFill();
+      ofSetHexColor(0xc0dd3b);
+      circle->draw();
+    }
+
+
 
 }
 
@@ -173,4 +201,3 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
-
