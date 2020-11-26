@@ -28,14 +28,14 @@ Project{
         ]
 
         of.addons: [
-            'ofxOpenCv','ofxXmlSettings'
+            'ofxOpenCv','ofxXmlSettings', 'ofxBox2d',
         ]
 
         // additional flags for the project. the of module sets some
         // flags by default to add the core libraries, search paths...
         // this flags can be augmented through the following properties:
         of.pkgConfigs: []       // list of additional system pkgs to include
-        of.includePaths: []     // include search paths
+        of.includePaths: ['/home/art/apps/openframeworks_0.11.0/addons/ofxBox2D/libs']     // include search paths
         of.cFlags: []           // flags passed to the c compiler
         of.cxxFlags: []         // flags passed to the c++ compiler
         of.linkerFlags: ["/usr/local/lib/librealsense2.so"]      // flags passed to the linker
@@ -44,6 +44,7 @@ Project{
         of.frameworks: []       // osx only, additional frameworks to link with the project
         of.staticLibraries: []  // static libraries
         of.dynamicLibraries: [] // dynamic libraries
+
 
         // create a console window when the application start
         consoleApplication: false
