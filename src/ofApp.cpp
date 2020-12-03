@@ -31,11 +31,6 @@ void ofApp::setup(){
     _colorizer.set_option(RS2_OPTION_COLOR_SCHEME, 2);
 
 
-    // Box2d
-    box2d.init();
-    box2d.setGravity(0, 30);
-    box2d.createGround();
-    box2d.setFPS(30.0);
 
 }
 
@@ -84,14 +79,7 @@ void ofApp::update(){
     }
 
 
-    if ((int)ofRandom(0, 10) == 0) {
-            auto c = make_shared<ofxBox2dCircle>();
 
-            c->setPhysics(0.2, 0.2, 0.002);
-            c->setup(box2d.getWorld(), ofRandom(1, 320), -20, ofRandom(3, 10));
-            c->setVelocity(0, 15); // shoot them down!
-            circles.push_back(c);
-        }
 
 
 }

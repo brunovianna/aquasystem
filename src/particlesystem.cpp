@@ -44,7 +44,7 @@ void particleSystem::run(vector <ofPolyline> blobs){
                 addSplashParticle(dropParticles[i].touch_point);
           } else {
               if (dropParticles[i].ground) {
-                  if (blobs.size()>0) { //only turn to word if no one is on camera
+                  if (blobs.size()==0) { //only turn to word if no one is on camera
                       addWordParticle(dropParticles[i].position.x);
                   }
               } else {

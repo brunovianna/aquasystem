@@ -4,7 +4,7 @@
 #include <librealsense2/rs.hpp>
 #include "particlesystem.h"
 #include "ofxOpenCv.h"
-#include "ofxBox2d.h"
+
 
 class ofApp : public ofBaseApp{
 
@@ -53,9 +53,6 @@ public:
     ofxCvContourFinder		contourFinder;
 
     vector <ofPolyline>                  people;
-    ofxBox2d                             box2d;
-    vector <shared_ptr<ofxBox2dCircle>>  circles;
-    //vector <shared_ptr<ofxBox2dEdge>>    edges;
 
 };
 

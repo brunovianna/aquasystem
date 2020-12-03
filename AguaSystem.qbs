@@ -30,7 +30,7 @@ Project{
         ]
 
         of.addons: [
-            'ofxOpenCv','ofxXmlSettings', 'ofxBox2d',
+            'ofxOpenCv','ofxXmlSettings'
         ]
 
         // additional flags for the project. the of module sets some
