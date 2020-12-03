@@ -4,6 +4,7 @@
 #include <librealsense2/rs.hpp>
 #include "particlesystem.h"
 #include "ofxOpenCv.h"
+#include "ofxBox2d.h"
 
 class ofApp : public ofBaseApp{
 
@@ -39,23 +40,22 @@ public:
     rs2::threshold_filter thr_filter;
     rs2::frameset frame_set;
 
-
-
-
-
     ofTexture depthTex;
     ofTexture camTex;
 
-
-
     // Define a variable for controlling the distance to clip
-    float depth_clipping_distance_far = 0.9f;
+    float depth_clipping_distance_far = 1.5f;
     float depth_clipping_distance_near = 0.3f;
 
     ofxCvGrayscaleImage cv_grayscale;
     ofxCvColorImage cv_color;
 
     ofxCvContourFinder		contourFinder;
+
+    vector <ofPolyline>                  people;
+    ofxBox2d                             box2d;
+    vector <shared_ptr<ofxBox2dCircle>>  circles;
+    //vector <shared_ptr<ofxBox2dEdge>>    edges;
 
 };
 

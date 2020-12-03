@@ -6,7 +6,6 @@
 int main( ){
 
     ofGLFWWindowSettings mainSetting;
-    mainSetting.setGLVersion(4,1);
     mainSetting.setSize(1280, 720);
     mainSetting.setPosition(ofVec2f(0, 0));
     mainSetting.decorated = false;
