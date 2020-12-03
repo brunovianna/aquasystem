@@ -14,6 +14,8 @@ Project{
         files: [
             "src/dropparticle.cpp",
             "src/dropparticle.h",
+            "src/explodeparticle.cpp",
+            "src/explodeparticle.h",
             "src/particle.cpp",
             "src/particle.h",
             "src/particlesystem.cpp",

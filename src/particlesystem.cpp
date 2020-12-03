@@ -6,7 +6,8 @@ particleSystem::particleSystem()
     ofh = ofGetHeight();
     ofw = ofGetWidth();
     roboto.load("Roboto-Medium.ttf",32,true,true);
-    aguaText = "agua";
+    agua_text = "agua";
+    explosion_text = "agua es vida";
 }
 
 void particleSystem::addDropParticle() {
@@ -20,8 +21,13 @@ void particleSystem::addSplashParticle(glm::vec2 touch_point) {
 }
 
 void particleSystem::addWordParticle(float x) {
-    wordParticle wp(x,roboto,aguaText);
+    wordParticle wp(x,roboto,agua_text);
     wordParticles.push_back(wp);
+}
+
+void particleSystem::addExplodeParticle(glm::vec2 _pos, ofTrueTypeFont _font, string _text) {
+    explodeParticle ep(_pos,_font,_text);
+    explodeParticles.push_back(ep);
 }
 
 void particleSystem::run(vector <ofPolyline> blobs){
@@ -38,7 +44,15 @@ void particleSystem::run(vector <ofPolyline> blobs){
                 addSplashParticle(dropParticles[i].touch_point);
           } else {
               if (dropParticles[i].ground) {
-                  addWordParticle(dropParticles[i].position.x);
+                  if (blobs.size()>0) { //only turn to word if no one is on camera
+                      addWordParticle(dropParticles[i].position.x);
+                  }
+              } else {
+                  if (dropParticles[i].explode) {
+                      ofSetColor(ofColor::rosyBrown);
+                      addExplodeParticle( dropParticles[i].position, roboto, explosion_text);
+                      ofSetColor(ofColor::lightGray);
+                  }
               }
           }
         dropParticles.erase(dropParticles.begin()+i); // needs to use an iterator here
@@ -55,6 +69,12 @@ void particleSystem::run(vector <ofPolyline> blobs){
         wordParticles[i].run();
         if (wordParticles[i].isDead())
             wordParticles.erase(wordParticles.begin()+i);
+    }
+
+    for (int i = explodeParticles.size()-1; i >= 0; i--) {
+        explodeParticles[i].run();
+        if (explodeParticles[i].isDead())
+            explodeParticles.erase(explodeParticles.begin()+i);
     }
 
 }

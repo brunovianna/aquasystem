@@ -13,6 +13,7 @@ dropParticle::dropParticle(glm::vec2 p) {
     dead = false;
     touch = false;
     ground = false;
+    explode = false;
     touch_point = glm::vec2(-1.,-1.);
 
 
@@ -36,8 +37,13 @@ void dropParticle::update(vector <ofPolyline> blobs) {
         for (ofPolyline blob: blobs) {
             if (blob.inside(ofPoint(position))) {
                 dead = true;
-                touch = true;
                 touch_point = blob.getClosestPoint(ofPoint(position));
+                if (ofDist(touch_point.x,touch_point.y,position.x, position.y)>20.0) {
+                    explode = true;
+                } else {
+                    touch = true;
+                }
+
             }
         }
     }

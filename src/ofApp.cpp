@@ -87,6 +87,7 @@ void ofApp::update(){
 void ofApp::draw(){
 
     ofBackground(ofColor::black);
+    ofSetColor(ofColor::lightGray);
     depthTex.draw(0,0);
 
     vector <ofPolyline> blobs;

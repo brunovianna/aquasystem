@@ -14,7 +14,7 @@ public:
     void run(vector <ofPolyline> blobs);
     void update(vector <ofPolyline> blobs);
     bool isDead();
-    bool touch, ground;
+    bool touch, ground, explode;
     glm::vec2 touch_point;
 };
 
