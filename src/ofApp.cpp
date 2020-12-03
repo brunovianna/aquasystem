@@ -30,7 +30,14 @@ void ofApp::setup(){
     _colorizer.set_option(RS2_OPTION_MIN_DISTANCE, depth_clipping_distance_near);
     _colorizer.set_option(RS2_OPTION_COLOR_SCHEME, 2);
 
+    box2d.init();
+    box2d.setGravity(0, 10);
+    box2d.setFPS(30.0);
 
+    box2d.registerGrabbing();
+    box2d.createBounds();
+
+    particles.setup(box2d.getWorld());
 
 }
 
@@ -78,8 +85,30 @@ void ofApp::update(){
 
     }
 
+    blobs.clear();
+    polyShapes.clear();
+
+    for (int i=0; i<contourFinder.nBlobs; i++){
+        ofPolyline blob(contourFinder.blobs[i].pts);
+        ofPolyline simple;
+        //blob.simplify(0.9f);
+        //simple = blob.getResampledBySpacing(30.f);
+        simple = blob.getSmoothed(8,0.1);
+        //simple = simple.getResampledByCount(30.f);
+        blobs.push_back(simple);
+        auto box2dpoly = std::make_shared<ofxBox2dPolygon>();
+        box2dpoly->addVertices(simple.getVertices());
+        box2dpoly->triangulatePoly();
+
+        box2dpoly->create(box2d.getWorld());
+        polyShapes.push_back(box2dpoly);
+
+    }
 
 
+
+
+box2d.update();
 
 
 }
@@ -88,23 +117,21 @@ void ofApp::update(){
 void ofApp::draw(){
 
     ofBackground(ofColor::black);
-    ofSetColor(ofColor::lightGray);
+    ofSetColor(ofColor::white);
     depthTex.draw(0,0);
-
-    vector <ofPolyline> blobs;
-
-    for (int i=0; i<contourFinder.nBlobs; i++){
-        ofPolyline blob(contourFinder.blobs[i].pts);
-        //blob.simplify();
-        blobs.push_back(blob);
-        blob.draw();
-    }
 
 
    // if (ofGetFrameNum()%2==0)
     ps.addDropParticle();
 
     ps.run(blobs);
+    particles.draw();
+
+    ofSetColor(ofColor::lightGray);
+    for (auto b: blobs) b.draw();
+    ofSetColor(ofColor::yellowGreen);
+    for (auto p: polyShapes) p->draw();
+
 
 }
 
@@ -125,7 +152,14 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+    for (int i = 0; i < 20; i++) {
+        float radius = 40;
+        float x = cos(ofRandom(PI*2.0)) * radius + mouseX;
+        float y = sin(ofRandom(PI*2.0)) * radius + mouseY;
+        ofVec2f position = ofVec2f(x, y);
+        ofVec2f velocity = ofVec2f(ofRandom(-200, 200), ofRandom(-200, 200));
+        particles.createParticle(position, velocity);
+    }
 }
 
 //--------------------------------------------------------------

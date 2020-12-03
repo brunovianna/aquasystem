@@ -30,7 +30,7 @@ Project{
         ]
 
         of.addons: [
-            'ofxOpenCv','ofxXmlSettings'
+            'ofxOpenCv','ofxXmlSettings', 'ofxLiquidFun',
         ]
 
         // additional flags for the project. the of module sets some

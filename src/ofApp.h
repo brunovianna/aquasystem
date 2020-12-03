@@ -4,7 +4,7 @@
 #include <librealsense2/rs.hpp>
 #include "particlesystem.h"
 #include "ofxOpenCv.h"
-
+#include "ofxLiquidFun.h"
 
 class ofApp : public ofBaseApp{
 
@@ -53,6 +53,12 @@ public:
     ofxCvContourFinder		contourFinder;
 
     vector <ofPolyline>                  people;
+
+    ofxBox2d box2d;
+    ofxBox2dParticleSystem particles;			      //    LiquidFun particle system
+
+    vector <shared_ptr<ofxBox2dPolygon>>  polyShapes;
+    vector <ofPolyline> blobs;
 
 };
 
