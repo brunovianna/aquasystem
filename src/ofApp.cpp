@@ -37,7 +37,11 @@ void ofApp::setup(){
     box2d.registerGrabbing();
     box2d.createBounds();
 
-    particles.setup(box2d.getWorld());
+
+    //(b2World * _b2world, int _maxCount, float _lifetime, float _radius, float _particleSize, ofColor _color){
+    particles.setup(box2d.getWorld(),1000,1000,2.f,5.f,ofColor(80,168,217,70));
+    particles.loadImage("drop_circle_a.png");
+    //particles.setRadius(5.f);
 
 }
 
@@ -108,7 +112,7 @@ void ofApp::update(){
 
 
 
-box2d.update();
+    box2d.update();
 
 
 }
@@ -129,8 +133,8 @@ void ofApp::draw(){
 
     ofSetColor(ofColor::lightGray);
     for (auto b: blobs) b.draw();
-    ofSetColor(ofColor::yellowGreen);
-    for (auto p: polyShapes) p->draw();
+    //ofSetColor(ofColor::yellowGreen);
+    //for (auto p: polyShapes) p->draw();
 
 
 }
