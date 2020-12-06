@@ -105,4 +105,23 @@ void particleSystem::run(vector <ofPolyline> blobs){
             explodeParticles.erase(explodeParticles.begin()+i);
     }
 
+    draw_circles(water_particles);
+}
+
+void particleSystem::draw_circles(ofxBox2dParticleSystem * water_particles)
+{
+    for (int i=0;i<water_particles->getParticleCount();i++)
+    {
+
+
+
+        ofSetColor(water_particles->color);
+        ofEnablePointSprites();
+        ofPushMatrix();
+        ofScale(OFX_BOX2D_SCALE, OFX_BOX2D_SCALE);
+        ofDrawCircle(water_particles->particleSystem->GetPositionBuffer()[i].x,water_particles->particleSystem->GetPositionBuffer()[i].y,water_particles->particleSystem->GetRadius());
+        ofPopMatrix();
+        ofDisablePointSprites();
+
+    }
 }

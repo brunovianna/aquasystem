@@ -42,7 +42,7 @@ void ofApp::setup(){
     //(b2World * _b2world, int _maxCount, float _lifetime, float _radius, float _particleSize, ofColor _color){
     water_particles.setup(box2d.getWorld(),1000,1000,2.f,5.f,ofColor(161,200,226,70));
 
-    //water_particles.loadImage("drop_circle_a.png");
+    // water_particles.loadImage("drop_circle_a.png");
     //particles.setRadius(5.f);
 
     ps.water_particles = &water_particles;
@@ -122,6 +122,7 @@ void ofApp::update(){
     }
 
     //some pesky particles end up inside the shapes, so let's get rid of them
+    //should i really erase them? or just paint over the blobs? what is faster?
 //    for (auto p: polyShapes)
 //    {
 //       b2Vec2 points[3];
@@ -163,40 +164,31 @@ void ofApp::draw(){
 
    // if (ofGetFrameNum()%2==0)
     ps.addDropParticle();
-    water_particles.draw();
+    //water_particles.draw();
 
     ps.run(blobs);
 
 
     //draw the contour shapes as used by the particle system
-//    ofSetColor(ofColor::gray, 100);
-//    for (auto p: polyShapes)
-//    {
-//       b2Vec2 points[3];
-//       for (auto t: p->triangles)
-//       {
-
-
-//           points[0].Set( t.a.x,t.a.y);
-//           points[1].Set( t.b.x,t.b.y);
-//           points[2].Set( t.c.x,t.c.y);
-
-//           ofTriangle (t.a.x,t.a.y,0,t.b.x,t.b.y,0,t.c.x,t.c.y,0);
-
-
-//       }
-//    }
+    ofSetColor(ofColor::gray, 100);
+    for (auto p: polyShapes)
+    {
+       for (auto t: p->triangles)
+       {
+           ofDrawTriangle (t.a.x,t.a.y,0,t.b.x,t.b.y,0,t.c.x,t.c.y,0);
+       }
+    }
 
 
 //    option to use the brightness of the image as alpha
-//    ofImage mask;
-//    ofSetColor(ofColor::white);
-//    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-//    mask.setImageType(OF_IMAGE_COLOR_ALPHA);
-//    mask.setFromPixels(cv_grayscale.getPixels());
-//    mask.getTexture().setSwizzle(GL_TEXTURE_SWIZZLE_A,GL_RED);
-//    mask.draw(0,0);
-//    ofDisableBlendMode();
+    ofImage mask;
+    ofSetColor(ofColor::white);
+    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    mask.setImageType(OF_IMAGE_COLOR_ALPHA);
+    mask.setFromPixels(cv_grayscale.getPixels());
+    mask.getTexture().setSwizzle(GL_TEXTURE_SWIZZLE_A,GL_RED);
+    mask.draw(0,0);
+    ofDisableBlendMode();
 
 
 

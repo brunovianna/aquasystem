@@ -11,7 +11,7 @@ int main( ){
     mainSetting.decorated = false;
     mainSetting.windowMode = OF_WINDOW;
 
-    //mainSetting.setGLVersion(3,2); //if i set this version, it won't draw the water particle shape anymore
+    mainSetting.setGLVersion(3,2); //if i set this version, it won't draw the water particle shape anymore. so i wrote my own in particlesystem.cpp
     //mainSetting.numSamples = 8;´
     ofCreateWindow(mainSetting);
 
