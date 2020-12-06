@@ -10,7 +10,9 @@ int main( ){
     mainSetting.setPosition(ofVec2f(0, 0));
     mainSetting.decorated = false;
     mainSetting.windowMode = OF_WINDOW;
-    //mainSetting.numSamples = 8;
+
+    //mainSetting.setGLVersion(3,2); //if i set this version, it won't draw the water particle shape anymore
+    //mainSetting.numSamples = 8;´
     ofCreateWindow(mainSetting);
 
 

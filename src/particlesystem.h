@@ -8,6 +8,7 @@
 #include "wordparticle.h"
 #include "explodeparticle.h"
 #include "ofxOpenCv.h"
+#include "ofxLiquidFun.h"
 
 class particleSystem
 {
@@ -22,6 +23,7 @@ public:
 
     void addDropParticle();
     void addSplashParticle(glm::vec2 tp);
+    void addWaterParticle(glm::vec2 wp);
     void addWordParticle(float x);
     void addExplodeParticle(glm::vec2 _pos,  ofTrueTypeFont _font, string _text);
     void run(vector <ofPolyline> blobs);
@@ -30,6 +32,10 @@ public:
 
     ofTrueTypeFont	roboto;
     string agua_text, explosion_text;
+    ofxBox2dParticleSystem * water_particles;
+
+    b2ParticleDef water_pd;
+    b2ParticleGroup * water_particles_group;
 
 };
 

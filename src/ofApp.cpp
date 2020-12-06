@@ -1,6 +1,7 @@
 #include "ofApp.h"
 
 
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetFrameRate(30);
@@ -39,9 +40,19 @@ void ofApp::setup(){
 
 
     //(b2World * _b2world, int _maxCount, float _lifetime, float _radius, float _particleSize, ofColor _color){
-    particles.setup(box2d.getWorld(),1000,1000,2.f,5.f,ofColor(80,168,217,70));
-    particles.loadImage("drop_circle_a.png");
+    water_particles.setup(box2d.getWorld(),1000,1000,2.f,5.f,ofColor(161,200,226,70));
+
+    //water_particles.loadImage("drop_circle_a.png");
     //particles.setRadius(5.f);
+
+    ps.water_particles = &water_particles;
+
+    ps.water_particles_group = water_particles.createCircleParticleGroup(ofVec2f(0,0),5.,ofColor(161,200,226,70));
+
+
+
+   t0.Set(b2Vec2(0,0),0.f);
+   ofx_invert_b2scale = 1/OFX_BOX2D_SCALE;
 
 }
 
@@ -83,6 +94,7 @@ void ofApp::update(){
 
         cv_color.setFromPixels(buff,depthWidth,depthHeight);
         cv_grayscale = cv_color;
+
         // Find contours whose areas are betweeen 20 and 25000 pixels
         // "Find holes" is true, so we'll also get interior contours.
         contourFinder.findContours(cv_grayscale, 2000, 1000000, 10, false);
@@ -109,10 +121,32 @@ void ofApp::update(){
 
     }
 
+    //some pesky particles end up inside the shapes, so let's get rid of them
+//    for (auto p: polyShapes)
+//    {
+//       b2Vec2 points[3];
+//       for (auto t: p->triangles)
+//       {
 
+//           points[0].Set( t.a.x,t.a.y);
+//           points[1].Set( t.b.x,t.b.y);
+//           points[2].Set( t.c.x,t.c.y);
+
+//           b2PolygonShape bs;
+//           bs.Set(points,3);
+//           for (int i=0;i<water_particles.getParticleCount();i++)
+//           {
+//               if (bs.TestPoint(t0,water_particles.particleSystem->GetPositionBuffer()[i]*OFX_BOX2D_SCALE))
+//                   water_particles.particleSystem->DestroyParticle(i);
+//           }
+
+//       }
+//    }
 
 
     box2d.update();
+
+
 
 
 }
@@ -121,21 +155,56 @@ void ofApp::update(){
 void ofApp::draw(){
 
     ofBackground(ofColor::black);
-    ofSetColor(ofColor::white);
+
+    //uncomment to draw the depth image under the drops
     depthTex.draw(0,0);
+
 
 
    // if (ofGetFrameNum()%2==0)
     ps.addDropParticle();
+    water_particles.draw();
 
     ps.run(blobs);
-    particles.draw();
 
-    ofSetColor(ofColor::lightGray);
-    for (auto b: blobs) b.draw();
-    //ofSetColor(ofColor::yellowGreen);
-    //for (auto p: polyShapes) p->draw();
 
+    //draw the contour shapes as used by the particle system
+//    ofSetColor(ofColor::gray, 100);
+//    for (auto p: polyShapes)
+//    {
+//       b2Vec2 points[3];
+//       for (auto t: p->triangles)
+//       {
+
+
+//           points[0].Set( t.a.x,t.a.y);
+//           points[1].Set( t.b.x,t.b.y);
+//           points[2].Set( t.c.x,t.c.y);
+
+//           ofTriangle (t.a.x,t.a.y,0,t.b.x,t.b.y,0,t.c.x,t.c.y,0);
+
+
+//       }
+//    }
+
+
+//    option to use the brightness of the image as alpha
+//    ofImage mask;
+//    ofSetColor(ofColor::white);
+//    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+//    mask.setImageType(OF_IMAGE_COLOR_ALPHA);
+//    mask.setFromPixels(cv_grayscale.getPixels());
+//    mask.getTexture().setSwizzle(GL_TEXTURE_SWIZZLE_A,GL_RED);
+//    mask.draw(0,0);
+//    ofDisableBlendMode();
+
+
+
+// this just uses add mode, doesn't look so good
+//    ofEnableBlendMode(OF_BLENDMODE_ADD);
+//    ofSetColor(ofColor::white);
+//    depthTex.draw(0,0);
+//    ofDisableBlendMode();
 
 }
 
@@ -162,7 +231,7 @@ void ofApp::mouseDragged(int x, int y, int button){
         float y = sin(ofRandom(PI*2.0)) * radius + mouseY;
         ofVec2f position = ofVec2f(x, y);
         ofVec2f velocity = ofVec2f(ofRandom(-200, 200), ofRandom(-200, 200));
-        particles.createParticle(position, velocity);
+        water_particles.createParticle(position, velocity);
     }
 }
 

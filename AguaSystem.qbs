@@ -22,6 +22,8 @@ Project{
             "src/particlesystem.h",
             "src/splashparticle.cpp",
             "src/splashparticle.h",
+            "src/waterparticle.cpp",
+            "src/waterparticle.h",
             "src/wordparticle.cpp",
             "src/wordparticle.h",
             'src/main.cpp',

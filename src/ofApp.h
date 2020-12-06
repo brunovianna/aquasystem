@@ -55,10 +55,13 @@ public:
     vector <ofPolyline>                  people;
 
     ofxBox2d box2d;
-    ofxBox2dParticleSystem particles;			      //    LiquidFun particle system
+    ofxBox2dParticleSystem water_particles;			      //    LiquidFun particle system
+    b2Transform t0;
 
     vector <shared_ptr<ofxBox2dPolygon>>  polyShapes;
     vector <ofPolyline> blobs;
+
+    float ofx_invert_b2scale;
 
 };
 

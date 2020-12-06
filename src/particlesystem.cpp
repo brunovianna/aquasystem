@@ -8,6 +8,14 @@ particleSystem::particleSystem()
     roboto.load("Roboto-Medium.ttf",32,true,true);
     agua_text = "agua";
     explosion_text = "agua es vida";
+    water_particles = NULL;
+    water_particles_group = NULL;
+
+    water_pd.flags = b2ParticleFlag::b2_waterParticle;
+    water_pd.color = b2ParticleColor(161,200,226,70);
+    water_pd.lifetime = 1000;
+
+
 }
 
 void particleSystem::addDropParticle() {
@@ -19,6 +27,23 @@ void particleSystem::addSplashParticle(glm::vec2 touch_point) {
     splashParticle sp(touch_point);
     splashParticles.push_back(sp);
 }
+
+void particleSystem::addWaterParticle(glm::vec2 create_point) {
+    if ((water_particles!=NULL)&&(water_particles_group !=NULL))
+    {
+        ofVec2f position = create_point;
+        ofVec2f velocity = ofVec2f(ofRandom(-10, 10), ofRandom(-20, -15));
+        water_pd.position = ( b2Vec2 (position.x,position.y));
+        water_pd.velocity = ( b2Vec2 (velocity.x,velocity.y));
+        water_pd.group = water_particles_group;
+//        water_particles->particleSystem->CreateParticle(water_pd);
+      water_particles->createParticle(position, velocity);
+
+
+
+    }
+}
+
 
 void particleSystem::addWordParticle(float x) {
     wordParticle wp(x,roboto,agua_text);
@@ -39,9 +64,12 @@ void particleSystem::run(vector <ofPolyline> blobs){
       dropParticles[i].run(blobs);
       if (dropParticles[i].isDead()) {
           if (dropParticles[i].touch) {
-              int splashes_amount = (int)ofRandom(4);
+              int splashes_amount = (int)ofRandom(8);
               for (int j=0;j<splashes_amount;j++)
-                addSplashParticle(dropParticles[i].touch_point);
+              {
+                  addSplashParticle(dropParticles[i].touch_point);
+                  addWaterParticle(glm::vec2 (dropParticles[i].touch_point.x,dropParticles[i].touch_point.y-7));
+              }
           } else {
               if (dropParticles[i].ground) {
                   if (blobs.size()==0) { //only turn to word if no one is on camera
