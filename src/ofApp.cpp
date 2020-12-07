@@ -4,13 +4,15 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    ofSetFrameRate(30);
+    ofSetFrameRate(24);
 
     ofw = ofGetWindowWidth();
     ofh = ofGetWindowHeight();
 
 
     ofTrueTypeFont::setGlobalDpi(72);
+    roboto_gui.load("Roboto-Medium.ttf",16,true,true);
+    show_gui = false;
 
     //playback from file - uncomment below
     //rs2::config cfg;
@@ -33,10 +35,10 @@ void ofApp::setup(){
 
     box2d.init();
     box2d.setGravity(0, 10);
-    box2d.setFPS(30.0);
+    box2d.setFPS(24.0);
 
-    box2d.registerGrabbing();
-    box2d.createBounds();
+    //box2d.registerGrabbing();
+    //box2d.createBounds();
 
 
     //(b2World * _b2world, int _maxCount, float _lifetime, float _radius, float _particleSize, ofColor _color){
@@ -46,8 +48,6 @@ void ofApp::setup(){
     //particles.setRadius(5.f);
 
     ps.water_particles = &water_particles;
-
-    ps.water_particles_group = water_particles.createCircleParticleGroup(ofVec2f(0,0),5.,ofColor(161,200,226,70));
 
 
 
@@ -123,30 +123,34 @@ void ofApp::update(){
 
     //some pesky particles end up inside the shapes, so let's get rid of them
     //should i really erase them? or just paint over the blobs? what is faster?
-//    for (auto p: polyShapes)
-//    {
-//       b2Vec2 points[3];
-//       for (auto t: p->triangles)
-//       {
-
-//           points[0].Set( t.a.x,t.a.y);
-//           points[1].Set( t.b.x,t.b.y);
-//           points[2].Set( t.c.x,t.c.y);
-
-//           b2PolygonShape bs;
-//           bs.Set(points,3);
-//           for (int i=0;i<water_particles.getParticleCount();i++)
-//           {
-//               if (bs.TestPoint(t0,water_particles.particleSystem->GetPositionBuffer()[i]*OFX_BOX2D_SCALE))
-//                   water_particles.particleSystem->DestroyParticle(i);
-//           }
-
-//       }
-//    }
+   // for (auto p: polyShapes)
+   // {
+   //    b2Vec2 points[3];
+   //    for (auto t: p->triangles)
+   //    {
+   //
+   //        points[0].Set( t.a.x,t.a.y);
+   //        points[1].Set( t.b.x,t.b.y);
+   //        points[2].Set( t.c.x,t.c.y);
+   //
+   //        b2PolygonShape bs;
+   //        bs.Set(points,3);
+   //        for (int i=0;i<water_particles.getParticleCount();i++)
+   //        {
+   //            if (bs.TestPoint(t0,water_particles.particleSystem->GetPositionBuffer()[i]*OFX_BOX2D_SCALE))
+   //                water_particles.particleSystem->DestroyParticle(i);
+   //        }
+   //
+   //    }
+   // }
 
 
     box2d.update();
+    //ofLog(OF_LOG_NOTICE,  to_string(water_particles.getParticleCount()));
 
+    int inv_drops = (24.0f/(float)num_raindrops);
+    if (ofGetFrameNum()%inv_drops==0)
+      ps.addDropParticle();
 
 
 
@@ -158,19 +162,17 @@ void ofApp::draw(){
     ofBackground(ofColor::black);
 
     //uncomment to draw the depth image under the drops
-    depthTex.draw(0,0);
+    //depthTex.draw(0,0);
 
 
 
-   // if (ofGetFrameNum()%2==0)
-    ps.addDropParticle();
     //water_particles.draw();
 
     ps.run(blobs);
 
 
     //draw the contour shapes as used by the particle system
-    ofSetColor(ofColor::gray, 100);
+    ofSetColor(ofColor::gray);
     for (auto p: polyShapes)
     {
        for (auto t: p->triangles)
@@ -179,21 +181,21 @@ void ofApp::draw(){
        }
     }
 
-
-//    option to use the brightness of the image as alpha
-    ofImage mask;
-    ofSetColor(ofColor::white);
-    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-    mask.setImageType(OF_IMAGE_COLOR_ALPHA);
-    mask.setFromPixels(cv_grayscale.getPixels());
-
-    //mask.getPixels().setChannel(3, mask.getPixels().getChannel(0));
-    mask.getTexture().setAlphaMask(mask.getTexture());
-    //mask.getTexture().setSwizzle(GL_TEXTURE_SWIZZLE_A,GL_RED);
-
-    mask.draw(0,0);
-    ofDisableBlendMode();
-
+// not working in the raspi
+// //    option to use the brightness of the image as alpha
+//     ofImage mask;
+//     ofSetColor(ofColor::white);
+//     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+//     mask.setImageType(OF_IMAGE_COLOR_ALPHA);
+//     mask.setFromPixels(cv_grayscale.getPixels());
+//
+//     //mask.getPixels().setChannel(3, mask.getPixels().getChannel(0));
+//     //mask.getTexture().setAlphaMask(mask.getTexture());
+//     mask.getTexture().setSwizzle(GL_TEXTURE_SWIZZLE_A,GL_RED);
+//
+//     mask.draw(0,0);
+//     ofDisableBlendMode();
+//
 
 
 // this just uses add mode, doesn't look so good
@@ -202,6 +204,11 @@ void ofApp::draw(){
 //    depthTex.draw(0,0);
 //    ofDisableBlendMode();
 
+  if (show_gui)
+  {
+    ofSetColor(ofColor::yellow);
+    roboto_gui.drawString ("Gotas por segundo: i<  "+to_string(num_raindrops)+" >o menos 'i' más 'o'", 20,20);
+  }
 }
 
 //--------------------------------------------------------------
@@ -211,7 +218,18 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
+  switch (key)
+  {    case OF_KEY_RETURN:
+      case ' ':
+        show_gui = !show_gui;
+        break;
+      case 'i':
+        if (num_raindrops > 0) num_raindrops--;
+        break;
+      case 'o':
+        if (num_raindrops < 20) num_raindrops++;
 
+    }
 }
 
 //--------------------------------------------------------------
@@ -265,4 +283,3 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
-

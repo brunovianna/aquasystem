@@ -9,12 +9,6 @@ particleSystem::particleSystem()
     agua_text = "agua";
     explosion_text = "agua es vida";
     water_particles = NULL;
-    water_particles_group = NULL;
-
-    water_pd.flags = b2ParticleFlag::b2_waterParticle;
-    water_pd.color = b2ParticleColor(161,200,226,70);
-    water_pd.lifetime = 1000;
-
 
 }
 
@@ -29,15 +23,11 @@ void particleSystem::addSplashParticle(glm::vec2 touch_point) {
 }
 
 void particleSystem::addWaterParticle(glm::vec2 create_point) {
-    if ((water_particles!=NULL)&&(water_particles_group !=NULL))
+    if (water_particles!=NULL)
     {
         ofVec2f position = create_point;
         ofVec2f velocity = ofVec2f(ofRandom(-10, 10), ofRandom(-20, -15));
-        water_pd.position = ( b2Vec2 (position.x,position.y));
-        water_pd.velocity = ( b2Vec2 (velocity.x,velocity.y));
-        water_pd.group = water_particles_group;
-//        water_particles->particleSystem->CreateParticle(water_pd);
-      water_particles->createParticle(position, velocity);
+        water_particles->createParticle(position, velocity);
 
 
 
@@ -104,17 +94,15 @@ void particleSystem::run(vector <ofPolyline> blobs){
         if (explodeParticles[i].isDead())
             explodeParticles.erase(explodeParticles.begin()+i);
     }
-
-    draw_circles(water_particles);
+    ofLog (OF_LOG_NOTICE, "removed "+to_string(remove_outside_circles()));
+    ofLog (OF_LOG_NOTICE, "total "+to_string(water_particles->getParticleCount()));
+    draw_circles();
 }
 
-void particleSystem::draw_circles(ofxBox2dParticleSystem * water_particles)
+void particleSystem::draw_circles()
 {
     for (int i=0;i<water_particles->getParticleCount();i++)
     {
-
-
-
         ofSetColor(water_particles->color);
         ofEnablePointSprites();
         ofPushMatrix();
@@ -124,4 +112,20 @@ void particleSystem::draw_circles(ofxBox2dParticleSystem * water_particles)
         ofDisablePointSprites();
 
     }
+}
+
+int particleSystem::remove_outside_circles() {
+  int num = 0;
+  for (int i=0;i<water_particles->getParticleCount();i++)
+  {
+    if ((water_particles->particleSystem->GetPositionBuffer()[i].x<0)||
+    (water_particles->particleSystem->GetPositionBuffer()[i].x*OFX_BOX2D_SCALE>ofw)||
+    (water_particles->particleSystem->GetPositionBuffer()[i].y<0)||
+    (water_particles->particleSystem->GetPositionBuffer()[i].y*OFX_BOX2D_SCALE>ofh))
+    {
+        water_particles->particleSystem->DestroyParticle(i);
+        num++;
+    }
+  }
+  return num;
 }

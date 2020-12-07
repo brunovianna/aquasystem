@@ -6,6 +6,7 @@
 #include "ofxOpenCv.h"
 #include "ofxLiquidFun.h"
 
+
 class ofApp : public ofBaseApp{
 
 public:
@@ -25,6 +26,13 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
+    //gui
+    bool show_gui;
+    int num_raindrops = 4;
+    // Define a variable for controlling the distance to clip
+    float depth_clipping_distance_far = 1.5f;
+    float depth_clipping_distance_near = 0.3f;
+    ofTrueTypeFont	roboto_gui;
 
     particleSystem ps;
 
@@ -43,9 +51,6 @@ public:
     ofTexture depthTex;
     ofTexture camTex;
 
-    // Define a variable for controlling the distance to clip
-    float depth_clipping_distance_far = 1.5f;
-    float depth_clipping_distance_near = 0.3f;
 
     ofxCvGrayscaleImage cv_grayscale;
     ofxCvColorImage cv_color;
@@ -64,4 +69,3 @@ public:
     float ofx_invert_b2scale;
 
 };
-

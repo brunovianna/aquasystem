@@ -35,9 +35,9 @@ public:
     ofxBox2dParticleSystem * water_particles;
 
     b2ParticleDef water_pd;
-    b2ParticleGroup * water_particles_group;
 
-    void draw_circles(ofxBox2dParticleSystem * water_particles);
+    void draw_circles();
+    int remove_outside_circles ();
 };
 
 #endif // PARTICLESYSTEM_H
