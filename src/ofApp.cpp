@@ -186,7 +186,11 @@ void ofApp::draw(){
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     mask.setImageType(OF_IMAGE_COLOR_ALPHA);
     mask.setFromPixels(cv_grayscale.getPixels());
-    mask.getTexture().setSwizzle(GL_TEXTURE_SWIZZLE_A,GL_RED);
+
+    //mask.getPixels().setChannel(3, mask.getPixels().getChannel(0));
+    mask.getTexture().setAlphaMask(mask.getTexture());
+    //mask.getTexture().setSwizzle(GL_TEXTURE_SWIZZLE_A,GL_RED);
+
     mask.draw(0,0);
     ofDisableBlendMode();
 
