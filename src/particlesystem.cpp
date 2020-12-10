@@ -5,7 +5,8 @@ particleSystem::particleSystem()
 {
     ofh = ofGetHeight();
     ofw = ofGetWidth();
-    roboto.load("Roboto-Medium.ttf",32,true,true);
+    //agua_font.load("Roboto-Medium.ttf",32,true,true);
+    agua_font.load("AkkRg_Pro_1.otf",24,true,true);
     agua_text = "agua";
     explosion_text = "agua es vida";
     water_particles = NULL;
@@ -26,7 +27,7 @@ void particleSystem::addWaterParticle(glm::vec2 create_point) {
     if (water_particles!=NULL)
     {
         ofVec2f position = create_point;
-        ofVec2f velocity = ofVec2f(ofRandom(-10, 10), ofRandom(-20, -15));
+        ofVec2f velocity = ofVec2f(ofRandom(-3, 3), ofRandom(-5, -1));
         water_particles->createParticle(position, velocity);
 
 
@@ -36,7 +37,7 @@ void particleSystem::addWaterParticle(glm::vec2 create_point) {
 
 
 void particleSystem::addWordParticle(float x) {
-    wordParticle wp(x,roboto,agua_text);
+    wordParticle wp(x,agua_font,agua_text);
     wordParticles.push_back(wp);
 }
 
@@ -54,11 +55,21 @@ void particleSystem::run(vector <ofPolyline> blobs){
       dropParticles[i].run(blobs);
       if (dropParticles[i].isDead()) {
           if (dropParticles[i].touch) {
-              int splashes_amount = (int)ofRandom(8);
+              int splashes_amount = (int)ofRandom(4);
               for (int j=0;j<splashes_amount;j++)
               {
                   addSplashParticle(dropParticles[i].touch_point);
                   addWaterParticle(glm::vec2 (dropParticles[i].touch_point.x,dropParticles[i].touch_point.y-7));
+              }
+
+              int water_amount = (int)ofRandom(6);
+              if (water_particles->getParticleCount()+water_amount<max_water_drops)
+              {
+                  for (int j=0;j<water_amount;j++)
+                  {
+                      addSplashParticle(dropParticles[i].touch_point);
+                      addWaterParticle(glm::vec2 (dropParticles[i].touch_point.x,dropParticles[i].touch_point.y-7));
+                  }
               }
           } else {
               if (dropParticles[i].ground) {
@@ -68,7 +79,7 @@ void particleSystem::run(vector <ofPolyline> blobs){
               } else {
                   if (dropParticles[i].explode) {
                       ofSetColor(ofColor::rosyBrown);
-                      addExplodeParticle( dropParticles[i].position, roboto, explosion_text);
+                      addExplodeParticle( dropParticles[i].position, agua_font, explosion_text);
                       ofSetColor(ofColor::lightGray);
                   }
               }
@@ -94,8 +105,8 @@ void particleSystem::run(vector <ofPolyline> blobs){
         if (explodeParticles[i].isDead())
             explodeParticles.erase(explodeParticles.begin()+i);
     }
-    ofLog (OF_LOG_NOTICE, "removed "+to_string(remove_outside_circles()));
-    ofLog (OF_LOG_NOTICE, "total "+to_string(water_particles->getParticleCount()));
+    int removed_circles = remove_outside_circles();
+    ofLog (OF_LOG_NOTICE, "removed "+to_string(removed_circles));
     draw_circles();
 }
 

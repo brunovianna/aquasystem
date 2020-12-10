@@ -29,6 +29,7 @@ public:
     //gui
     bool show_gui;
     int num_raindrops = 4;
+    int max_water_drops = 150;
     // Define a variable for controlling the distance to clip
     float depth_clipping_distance_far = 1.5f;
     float depth_clipping_distance_near = 0.3f;

@@ -30,9 +30,10 @@ public:
     int ofw;
     int ofh;
 
-    ofTrueTypeFont	roboto;
+    ofTrueTypeFont agua_font;
     string agua_text, explosion_text;
     ofxBox2dParticleSystem * water_particles;
+    int max_water_drops;
 
     b2ParticleDef water_pd;
 

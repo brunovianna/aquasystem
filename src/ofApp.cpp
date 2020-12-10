@@ -42,13 +42,13 @@ void ofApp::setup(){
 
 
     //(b2World * _b2world, int _maxCount, float _lifetime, float _radius, float _particleSize, ofColor _color){
-    water_particles.setup(box2d.getWorld(),1000,1000,2.f,5.f,ofColor(161,200,226,70));
+    water_particles.setup(box2d.getWorld(),1000,1000,2.f,3.f,ofColor(161,200,226));
 
     // water_particles.loadImage("drop_circle_a.png");
     //particles.setRadius(5.f);
 
     ps.water_particles = &water_particles;
-
+    ps.max_water_drops = max_water_drops;
 
 
    t0.Set(b2Vec2(0,0),0.f);
@@ -148,7 +148,7 @@ void ofApp::update(){
     box2d.update();
     //ofLog(OF_LOG_NOTICE,  to_string(water_particles.getParticleCount()));
 
-    int inv_drops = (24.0f/(float)num_raindrops);
+    int inv_drops = (ofGetTargetFrameRate()/(float)num_raindrops);
     if (ofGetFrameNum()%inv_drops==0)
       ps.addDropParticle();
 
@@ -207,7 +207,10 @@ void ofApp::draw(){
   if (show_gui)
   {
     ofSetColor(ofColor::yellow);
-    roboto_gui.drawString ("Gotas por segundo: i<  "+to_string(num_raindrops)+" >o menos 'i' más 'o'", 20,20);
+    roboto_gui.drawString ("Gotas por segundo: "+to_string(num_raindrops)+" (i/o para cambiar)", 20,20);
+    roboto_gui.drawString ("Número máximo de gotas azules simultaneas: "+to_string(max_water_drops)+"  (k/l para cambiar)", 20,50);
+    roboto_gui.drawString (to_string(ofGetFrameRate())+" fps", ofw-200,20);
+    roboto_gui.drawString (to_string(water_particles.getParticleCount())+" gotas azules", ofw-200,40);
   }
 }
 
@@ -228,7 +231,10 @@ void ofApp::keyReleased(int key){
         break;
       case 'o':
         if (num_raindrops < 20) num_raindrops++;
-
+      case 'k':
+        if (max_water_drops > 9) max_water_drops-=10;
+      case 'l':
+        if (max_water_drops < 2000) max_water_drops+=10;
     }
 }
 
