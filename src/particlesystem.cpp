@@ -6,7 +6,7 @@ particleSystem::particleSystem()
     ofh = ofGetHeight();
     ofw = ofGetWidth();
     //agua_font.load("Roboto-Medium.ttf",32,true,true);
-    agua_font.load("AkkRg_Pro_1.otf",24,true,true);
+    agua_font.load("AkkRg_Pro_1.otf",20,true,true);
     agua_text = "agua";
     explosion_text = "agua es vida";
     water_particles = NULL;
@@ -73,7 +73,7 @@ void particleSystem::run(vector <ofPolyline> blobs){
               }
           } else {
               if (dropParticles[i].ground) {
-                  if (blobs.size()==0) { //only turn to word if no one is on camera
+                  if ((blobs.size()==0)&&(ofRandom(10)>7)) { //^only turn to word if no one is on camera
                       addWordParticle(dropParticles[i].position.x);
                   }
               } else {

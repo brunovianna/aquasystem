@@ -51,9 +51,30 @@ void dropParticle::update(vector <ofPolyline> blobs) {
 }
 void dropParticle::display(){
 
+    //drop "head"
+    int drop_steps = 10;
+    float start_gray = 200;
+    for (int i=0;i<drop_steps;i++)
+    {
+
+        ofSetColor(ofMap(i,0,drop_steps,start_gray,0));
+        ofDrawCircle(position.x-i*velocity.x*0.2, position.y-i*velocity.y*0.2,ofMap(i,0,drop_steps,2.5,0));
+    }
+
+
+    // drop line
+//    int drop_line_length = 30;
+//    for (int i=0;i<drop_line_length;i++)
+//    {
+
+//        ofSetColor(ofMap(i,0,drop_line_length,start_gray,0));
+//        ofDrawCircle(position.x-i*velocity.x*0.1, position.y-i*velocity.y*0.1,1.f);
+//    }
+
+
     ofSetColor(ofColor::lightGray);
     float dropHead = 2.5;
-    ofDrawEllipse(position.x, position.y, dropHead,dropHead*1.5);
+    ofDrawEllipse(position.x, position.y, dropHead,dropHead*2.5);
     float dropLength = 3;
     glm::vec2 dropStart  ((position.x-dropLength*velocity.x), (position.y-dropLength*velocity.y));
     ofDrawLine (dropStart.x, dropStart.y, position.x, position.y); //todo : gradient from white in the bottom to gray in the top
