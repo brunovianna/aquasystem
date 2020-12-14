@@ -10,11 +10,12 @@ particleSystem::particleSystem()
     agua_text = "agua";
     explosion_text = "agua es vida";
     water_particles = NULL;
+    drop_image.load("drop_a.png");
 
 }
 
 void particleSystem::addDropParticle() {
-    dropParticle dp(glm::vec2 (ofRandom(ofw),-10));
+    dropParticle dp(glm::vec2 (ofRandom(ofw),-10),glm::vec2(velocity_x,velocity_y), drop_image);
     dropParticles.push_back(dp);
 }
 
@@ -29,8 +30,6 @@ void particleSystem::addWaterParticle(glm::vec2 create_point) {
         ofVec2f position = create_point;
         ofVec2f velocity = ofVec2f(ofRandom(-3, 3), ofRandom(-5, -1));
         water_particles->createParticle(position, velocity);
-
-
 
     }
 }
@@ -59,7 +58,6 @@ void particleSystem::run(vector <ofPolyline> blobs){
               for (int j=0;j<splashes_amount;j++)
               {
                   addSplashParticle(dropParticles[i].touch_point);
-                  addWaterParticle(glm::vec2 (dropParticles[i].touch_point.x,dropParticles[i].touch_point.y-7));
               }
 
               int water_amount = (int)ofRandom(6);
@@ -67,7 +65,6 @@ void particleSystem::run(vector <ofPolyline> blobs){
               {
                   for (int j=0;j<water_amount;j++)
                   {
-                      addSplashParticle(dropParticles[i].touch_point);
                       addWaterParticle(glm::vec2 (dropParticles[i].touch_point.x,dropParticles[i].touch_point.y-7));
                   }
               }
@@ -80,7 +77,6 @@ void particleSystem::run(vector <ofPolyline> blobs){
                   if (dropParticles[i].explode) {
                       ofSetColor(ofColor::rosyBrown);
                       addExplodeParticle( dropParticles[i].position, agua_font, explosion_text);
-                      ofSetColor(ofColor::lightGray);
                   }
               }
           }
@@ -106,8 +102,9 @@ void particleSystem::run(vector <ofPolyline> blobs){
             explodeParticles.erase(explodeParticles.begin()+i);
     }
     int removed_circles = remove_outside_circles();
-    ofLog (OF_LOG_NOTICE, "removed "+to_string(removed_circles));
+    //ofLog (OF_LOG_NOTICE, "removed "+to_string(removed_circles));
     draw_circles();
+
 }
 
 void particleSystem::draw_circles()

@@ -29,6 +29,11 @@ public:
     void run(vector <ofPolyline> blobs);
     int ofw;
     int ofh;
+    float velocity_x;
+    float velocity_y;
+
+    ofImage drop_image;
+
 
     ofTrueTypeFont agua_font;
     string agua_text, explosion_text;

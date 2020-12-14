@@ -40,7 +40,6 @@ void ofApp::setup(){
     //box2d.registerGrabbing();
     //box2d.createBounds();
 
-
     //(b2World * _b2world, int _maxCount, float _lifetime, float _radius, float _particleSize, ofColor _color){
     water_particles.setup(box2d.getWorld(),1000,1000,2.f,3.f,ofColor(161,200,226));
 
@@ -54,13 +53,16 @@ void ofApp::setup(){
    t0.Set(b2Vec2(0,0),0.f);
    ofx_invert_b2scale = 1/OFX_BOX2D_SCALE;
 
+   ps.velocity_x = velocity_x;
+   ps.velocity_y = velocity_y;
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
-
-
+    ps.velocity_x = velocity_x;
+    ps.velocity_y = velocity_y;
 
 
     //comment below for live cam
@@ -146,7 +148,7 @@ void ofApp::update(){
 
 
     box2d.update();
-    //ofLog(OF_LOG_NOTICE,  to_string(water_particles.getParticleCount()));
+    ofLog(OF_LOG_NOTICE,  "particle count"+to_string(water_particles.getParticleCount()));
 
     int inv_drops = (ofGetTargetFrameRate()/(float)num_raindrops);
     if (ofGetFrameNum()%inv_drops==0)
@@ -209,9 +211,12 @@ void ofApp::draw(){
     ofSetColor(ofColor::yellow);
     roboto_gui.drawString ("Gotas por segundo: "+to_string(num_raindrops)+" (i/o para cambiar)", 20,20);
     roboto_gui.drawString ("Número máximo de gotas azules simultaneas: "+to_string(max_water_drops)+"  (k/l para cambiar)", 20,50);
+    roboto_gui.drawString ("Velocidad horizontal: "+to_string(velocity_x)+" (q/w para cambiar)", 20,80);
+    roboto_gui.drawString ("Velocidad vertical: "+to_string(velocity_y)+"  (a/s para cambiar)", 20,110);
     roboto_gui.drawString (to_string(ofGetFrameRate())+" fps", ofw-200,20);
     roboto_gui.drawString (to_string(water_particles.getParticleCount())+" gotas azules", ofw-200,40);
   }
+
 }
 
 //--------------------------------------------------------------
@@ -225,16 +230,31 @@ void ofApp::keyReleased(int key){
   {    case OF_KEY_RETURN:
       case ' ':
         show_gui = !show_gui;
-        break;
+      break;
       case 'i':
         if (num_raindrops > 0) num_raindrops--;
-        break;
+      break;
       case 'o':
         if (num_raindrops < 20) num_raindrops++;
+      break;
       case 'k':
         if (max_water_drops > 9) max_water_drops-=10;
+      break;
       case 'l':
         if (max_water_drops < 2000) max_water_drops+=10;
+      break;
+      case 'q':
+        if (velocity_x > -20.0) velocity_x-=.5f;
+      break;
+      case 'w':
+        if (velocity_x < 20.0) velocity_x+=.5f;
+      break;
+      case 'a':
+        if (velocity_y > 5.0f) velocity_y--;
+      break;
+      case 's':
+        if (velocity_y < 100.f) velocity_y++;
+      break;
     }
 }
 

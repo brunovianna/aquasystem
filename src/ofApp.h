@@ -33,6 +33,8 @@ public:
     // Define a variable for controlling the distance to clip
     float depth_clipping_distance_far = 1.5f;
     float depth_clipping_distance_near = 0.3f;
+    float velocity_x = 0.f;
+    float velocity_y = 5.f;
     ofTrueTypeFont	roboto_gui;
 
     particleSystem ps;
@@ -58,7 +60,6 @@ public:
 
     ofxCvContourFinder		contourFinder;
 
-    vector <ofPolyline>                  people;
 
     ofxBox2d box2d;
     ofxBox2dParticleSystem water_particles;			      //    LiquidFun particle system
