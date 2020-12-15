@@ -6,7 +6,11 @@ dropParticle::dropParticle(glm::vec2 p,  glm::vec2 v,  ofImage &di) {
 
     position = p;
     velocity = v;
-    angle = atan(velocity.y/velocity.x) - PI/2;
+    if (velocity.x!=0.f)
+        angle = (velocity.x>0?atan(velocity.y/velocity.x)- PI/2:-atan(-velocity.y/velocity.x)+PI/2);
+    else
+        angle = 0;
+
     acceleration = glm::vec2 (0,0.01);
     ofw = ofGetWindowWidth();
     ofh = ofGetWindowHeight();
