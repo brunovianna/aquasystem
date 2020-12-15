@@ -10,7 +10,7 @@ particleSystem::particleSystem()
     agua_text = "agua";
     explosion_text = "agua es vida";
     water_particles = NULL;
-    drop_image.load("drop_a.png");
+    drop_image.load("drop_b.png");
     bg_fbo.allocate(ofw,ofh,GL_RGBA);
 
 }
@@ -51,7 +51,7 @@ void particleSystem::run(vector <ofPolyline> blobs){
     ofEnableAlphaBlending();
     bg_fbo.begin();
     ofFill();
-      ofSetColor(255,255,255,20);
+      ofSetColor(100,5);
       ofDrawRectangle(0,0,ofw,ofh);
       bg_fbo.end();
     for (int i = dropParticles.size()-1; i >= 0; i--) {
@@ -91,7 +91,7 @@ void particleSystem::run(vector <ofPolyline> blobs){
     }
 
     bg_fbo.draw(0,0);
-    //ofDisableAlphaBlending();
+    ofDisableAlphaBlending();
 
     for (int i = splashParticles.size()-1; i >= 0; i--) {
         splashParticles[i].run();

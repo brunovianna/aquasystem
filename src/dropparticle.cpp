@@ -27,7 +27,7 @@ dropParticle::dropParticle(glm::vec2 p,  glm::vec2 v,  ofImage &di) {
 void dropParticle::run(vector <ofPolyline> blobs, ofFbo &bg) {
 
     update(blobs);
-    if (!dead) display(bg);
+    display(bg);
 }
 
 void dropParticle::update(vector <ofPolyline> blobs) {
@@ -125,14 +125,21 @@ void dropParticle::display(ofFbo &bg_fbo){
 
 
     bg_fbo.begin();
-    ofSetColor(ofColor::lightGray);
+    ofSetColor(ofColor::white);
 
     drop_image.draw(100,100);
 //    ofEnableAlphaBlending();
     ofPushMatrix();
     ofTranslate(position.x, position.y);
     ofRotateRad(angle);
-    drop_image.draw(-drop_image.getWidth()/2,-drop_image.getHeight());
+    if (dead) {
+        ofSetColor(ofColor::black);
+        ofFill();
+        ofDrawRectangle(-drop_image.getWidth()/2,0,drop_image.getWidth(),drop_image.getHeight());
+    } else
+    {
+        drop_image.draw(-drop_image.getWidth()/2,-drop_image.getHeight());
+    }
     ofPopMatrix();
 //    ofDisableAlphaBlending();
 //    drop_image.draw(position.x-drop_image.getWidth()/2, position.y-drop_image.getHeight());

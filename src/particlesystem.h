@@ -40,6 +40,7 @@ public:
     string agua_text, explosion_text;
     ofxBox2dParticleSystem * water_particles;
     int max_water_drops;
+    int trails_amount;
 
     b2ParticleDef water_pd;
 

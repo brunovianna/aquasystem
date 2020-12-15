@@ -162,7 +162,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    ofDisableAlphaBlending();
     ofBackground(ofColor::black);
 
     //uncomment to draw the depth image under the drops
@@ -215,8 +215,10 @@ void ofApp::draw(){
     roboto_gui.drawString ("Número máximo de gotas azules simultaneas: "+to_string(max_water_drops)+"  (k/l para cambiar)", 20,50);
     roboto_gui.drawString ("Velocidad horizontal: "+to_string(velocity_x)+" (q/w para cambiar)", 20,80);
     roboto_gui.drawString ("Velocidad vertical: "+to_string(velocity_y)+"  (a/s para cambiar)", 20,110);
+    roboto_gui.drawString ("Rastro: "+to_string(trails_amount)+"  (z/x para cambiar)", 20,140);
     roboto_gui.drawString (to_string(ofGetFrameRate())+" fps", ofw-200,20);
     roboto_gui.drawString (to_string(water_particles.getParticleCount())+" gotas azules", ofw-200,40);
+    ofSetColor(ofColor::white);
   }
 
 }
