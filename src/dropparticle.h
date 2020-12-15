@@ -11,8 +11,8 @@ class dropParticle : public particle
 public:
 
     dropParticle(glm::vec2 position, glm::vec2 velocity,  ofImage &drop_image);
-    void display();
-    void run(vector <ofPolyline> blobs);
+    void display(ofFbo &bg);
+    void run(vector <ofPolyline> blobs, ofFbo &bg);
     void update(vector <ofPolyline> blobs);
     bool isDead();
     bool touch, ground, explode;

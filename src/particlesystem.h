@@ -33,6 +33,7 @@ public:
     float velocity_y;
 
     ofImage drop_image;
+    ofFbo bg_fbo;
 
 
     ofTrueTypeFont agua_font;

@@ -14,6 +14,8 @@ void ofApp::setup(){
     roboto_gui.load("Roboto-Medium.ttf",16,true,true);
     show_gui = false;
 
+    ofSetBackgroundAuto(false);
+
     //playback from file - uncomment below
     //rs2::config cfg;
     //cfg.enable_device_from_file("data/b.bag");

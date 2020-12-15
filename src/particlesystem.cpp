@@ -11,6 +11,7 @@ particleSystem::particleSystem()
     explosion_text = "agua es vida";
     water_particles = NULL;
     drop_image.load("drop_a.png");
+    bg_fbo.allocate(ofw,ofh,GL_RGBA);
 
 }
 
@@ -47,11 +48,16 @@ void particleSystem::addExplodeParticle(glm::vec2 _pos, ofTrueTypeFont _font, st
 
 void particleSystem::run(vector <ofPolyline> blobs){
     //println(particles.size());
+    ofEnableAlphaBlending();
+    bg_fbo.begin();
+    ofFill();
+      ofSetColor(255,255,255,20);
+      ofDrawRectangle(0,0,ofw,ofh);
+      bg_fbo.end();
     for (int i = dropParticles.size()-1; i >= 0; i--) {
 
     //returns status -- 0 ok, 1 touched body, 2 touched ground
-
-      dropParticles[i].run(blobs);
+      dropParticles[i].run(blobs,bg_fbo);
       if (dropParticles[i].isDead()) {
           if (dropParticles[i].touch) {
               int splashes_amount = (int)ofRandom(4);
@@ -83,6 +89,9 @@ void particleSystem::run(vector <ofPolyline> blobs){
         dropParticles.erase(dropParticles.begin()+i); // needs to use an iterator here
       }
     }
+
+    bg_fbo.draw(0,0);
+    //ofDisableAlphaBlending();
 
     for (int i = splashParticles.size()-1; i >= 0; i--) {
         splashParticles[i].run();

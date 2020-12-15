@@ -24,10 +24,10 @@ dropParticle::dropParticle(glm::vec2 p,  glm::vec2 v,  ofImage &di) {
 
 }
 
-void dropParticle::run(vector <ofPolyline> blobs) {
+void dropParticle::run(vector <ofPolyline> blobs, ofFbo &bg) {
 
     update(blobs);
-    if (!dead) display();
+    if (!dead) display(bg);
 }
 
 void dropParticle::update(vector <ofPolyline> blobs) {
@@ -92,7 +92,7 @@ void dropParticle::update(vector <ofPolyline> blobs) {
     }
 
 }
-void dropParticle::display(){
+void dropParticle::display(ofFbo &bg_fbo){
 
 
     //drop "head"
@@ -124,19 +124,20 @@ void dropParticle::display(){
 //    ofDrawLine (dropStart.x, dropStart.y, position.x, position.y); //todo : gradient from white in the bottom to gray in the top
 
 
+    bg_fbo.begin();
     ofSetColor(ofColor::lightGray);
-    ofEnableAntiAliasing();
 
     drop_image.draw(100,100);
-
+//    ofEnableAlphaBlending();
     ofPushMatrix();
     ofTranslate(position.x, position.y);
     ofRotateRad(angle);
     drop_image.draw(-drop_image.getWidth()/2,-drop_image.getHeight());
     ofPopMatrix();
+//    ofDisableAlphaBlending();
 //    drop_image.draw(position.x-drop_image.getWidth()/2, position.y-drop_image.getHeight());
 
-
+    bg_fbo.end();
 
 }
 
