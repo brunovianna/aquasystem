@@ -12,11 +12,12 @@ particleSystem::particleSystem()
     water_particles = NULL;
     drop_image.load("drop_b.png");
     bg_fbo.allocate(ofw,ofh,GL_RGBA);
+    trails_amount = 0;
 
 }
 
 void particleSystem::addDropParticle() {
-    dropParticle dp(glm::vec2 (ofRandom(ofw),-10),glm::vec2(velocity_x,velocity_y), drop_image);
+    dropParticle dp(glm::vec2 (ofRandom(ofw),-10),glm::vec2(velocity_x,velocity_y), drop_image, &trails_amount);
     dropParticles.push_back(dp);
 }
 
@@ -48,12 +49,15 @@ void particleSystem::addExplodeParticle(glm::vec2 _pos, ofTrueTypeFont _font, st
 
 void particleSystem::run(vector <ofPolyline> blobs){
     //println(particles.size());
-    ofEnableAlphaBlending();
-    bg_fbo.begin();
-    ofFill();
-      ofSetColor(100,5);
-      ofDrawRectangle(0,0,ofw,ofh);
-      bg_fbo.end();
+    if (trails_amount>0)
+    {
+        ofEnableAlphaBlending();
+        bg_fbo.begin();
+        ofFill();
+        ofSetColor(100,trails_amount);
+        ofDrawRectangle(0,0,ofw,ofh);
+        bg_fbo.end();
+    }
     for (int i = dropParticles.size()-1; i >= 0; i--) {
 
     //returns status -- 0 ok, 1 touched body, 2 touched ground
@@ -89,9 +93,11 @@ void particleSystem::run(vector <ofPolyline> blobs){
         dropParticles.erase(dropParticles.begin()+i); // needs to use an iterator here
       }
     }
-
-    bg_fbo.draw(0,0);
-    ofDisableAlphaBlending();
+    if (trails_amount>0)
+    {
+        bg_fbo.draw(0,0);
+        ofDisableAlphaBlending();
+    }
 
     for (int i = splashParticles.size()-1; i >= 0; i--) {
         splashParticles[i].run();

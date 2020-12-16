@@ -2,9 +2,11 @@
 
 
 
-dropParticle::dropParticle(glm::vec2 p,  glm::vec2 v,  ofImage &di) {
+dropParticle::dropParticle(glm::vec2 p,  glm::vec2 v,  ofImage &di, int *_trails_amount) {
 
+    trails_amount = _trails_amount;
     position = p;
+
     velocity = v;
     if (velocity.x!=0.f)
         angle = (velocity.x>0?atan(velocity.y/velocity.x)- PI/2:-atan(-velocity.y/velocity.x)+PI/2);
@@ -124,27 +126,35 @@ void dropParticle::display(ofFbo &bg_fbo){
 //    ofDrawLine (dropStart.x, dropStart.y, position.x, position.y); //todo : gradient from white in the bottom to gray in the top
 
 
-    bg_fbo.begin();
-    ofSetColor(ofColor::white);
 
-    drop_image.draw(100,100);
-//    ofEnableAlphaBlending();
-    ofPushMatrix();
-    ofTranslate(position.x, position.y);
-    ofRotateRad(angle);
-    if (dead) {
-        ofSetColor(ofColor::black);
-        ofFill();
-        ofDrawRectangle(-drop_image.getWidth()/2,0,drop_image.getWidth(),drop_image.getHeight());
+    if (*trails_amount>0)
+
+    {
+        bg_fbo.begin();
+        ofSetColor(ofColor::white);
+        ofPushMatrix();
+        ofTranslate(position.x, position.y);
+        ofRotateRad(angle);
+        if (dead) {
+            ofSetColor(ofColor::black);
+            ofFill();
+            ofDrawRectangle(-drop_image.getWidth()/2,0,drop_image.getWidth(),drop_image.getHeight());
+        } else
+        {
+            drop_image.draw(-drop_image.getWidth()/2,-drop_image.getHeight());
+        }
+        ofPopMatrix();
+        bg_fbo.end();
     } else
     {
+        ofSetColor(ofColor::lightGray);
+        ofEnableAntiAliasing();
+        ofPushMatrix();
+        ofTranslate(position.x, position.y);
+        ofRotateRad(angle);
         drop_image.draw(-drop_image.getWidth()/2,-drop_image.getHeight());
+        ofPopMatrix();
     }
-    ofPopMatrix();
-//    ofDisableAlphaBlending();
-//    drop_image.draw(position.x-drop_image.getWidth()/2, position.y-drop_image.getHeight());
-
-    bg_fbo.end();
 
 }
 

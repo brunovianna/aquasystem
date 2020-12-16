@@ -65,6 +65,7 @@ void ofApp::update(){
 
     ps.velocity_x = velocity_x;
     ps.velocity_y = velocity_y;
+    ps.trails_amount = (trails_amount==0?0:101-trails_amount);
 
 
     //comment below for live cam
@@ -216,7 +217,9 @@ void ofApp::draw(){
     roboto_gui.drawString ("Velocidad horizontal: "+to_string(velocity_x)+" (q/w para cambiar)", 20,80);
     roboto_gui.drawString ("Velocidad vertical: "+to_string(velocity_y)+"  (a/s para cambiar)", 20,110);
     roboto_gui.drawString ("Rastro: "+to_string(trails_amount)+"  (z/x para cambiar)", 20,140);
-    roboto_gui.drawString (to_string(ofGetFrameRate())+" fps", ofw-200,20);
+    roboto_gui.drawString ("Distancia mínima: "+to_string(depth_clipping_distance_near)+"  (t/y para cambiar)", 20,170);
+    roboto_gui.drawString ("Distancia máxima: "+to_string(depth_clipping_distance_far)+"  (g/h para cambiar)", 20,200);
+    roboto_gui.drawString (to_string(ofGetFrameRate())+"/"+to_string(ofGetTargetFrameRate())+" fps", ofw-200,20);
     roboto_gui.drawString (to_string(water_particles.getParticleCount())+" gotas azules", ofw-200,40);
     ofSetColor(ofColor::white);
   }
@@ -258,6 +261,47 @@ void ofApp::keyReleased(int key){
       break;
       case 's':
         if (velocity_y < 100.f) velocity_y++;
+      break;
+      case 'z':
+        if (trails_amount > 0) trails_amount--;
+        if (trails_amount == 0) ps.drop_image.load("drop_c.png"); //the non transparent one
+      break;
+      case 'x':
+        if (trails_amount == 0) ps.drop_image.load("drop_b.png"); //the transparent one
+        if (trails_amount < 100) trails_amount++;
+      break;
+      case 't':
+        if (depth_clipping_distance_near > 0.)
+        {
+            depth_clipping_distance_near-=0.5f;
+            _colorizer.set_option(RS2_OPTION_MIN_DISTANCE, depth_clipping_distance_near);
+            thr_filter.set_option(RS2_OPTION_MIN_DISTANCE, depth_clipping_distance_near);
+
+        }
+      break;
+      case 'y':
+        if (depth_clipping_distance_near + 0.5f< depth_clipping_distance_far)
+        {
+            depth_clipping_distance_near+=0.5f;
+            _colorizer.set_option(RS2_OPTION_MIN_DISTANCE, depth_clipping_distance_near);
+            thr_filter.set_option(RS2_OPTION_MIN_DISTANCE, depth_clipping_distance_near);
+        }
+      break;
+      case 'g':
+        if (depth_clipping_distance_far - 0.5f > depth_clipping_distance_near)
+        {
+            depth_clipping_distance_far-=0.5f;
+            _colorizer.set_option(RS2_OPTION_MAX_DISTANCE, depth_clipping_distance_far);
+            thr_filter.set_option(RS2_OPTION_MAX_DISTANCE, depth_clipping_distance_far);
+        }
+      break;
+      case 'h':
+        if (depth_clipping_distance_far < 10.f)
+        {
+            depth_clipping_distance_far+=0.5f;
+            _colorizer.set_option(RS2_OPTION_MAX_DISTANCE, depth_clipping_distance_far);
+            thr_filter.set_option(RS2_OPTION_MAX_DISTANCE, depth_clipping_distance_far);
+        }
       break;
     }
 }
