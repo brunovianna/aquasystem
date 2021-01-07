@@ -263,12 +263,12 @@ void ofApp::keyReleased(int key){
         if (velocity_y < 100.f) velocity_y++;
       break;
       case 'z':
-        if (trails_amount > 0) trails_amount--;
+        if (trails_amount > 0) trails_amount-=5;
         if (trails_amount == 0) ps.drop_image.load("drop_c.png"); //the non transparent one
       break;
       case 'x':
         if (trails_amount == 0) ps.drop_image.load("drop_b.png"); //the transparent one
-        if (trails_amount < 100) trails_amount++;
+        if (trails_amount < 100) trails_amount+=5;
       break;
       case 't':
         if (depth_clipping_distance_near > 0.)

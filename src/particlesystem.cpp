@@ -54,7 +54,7 @@ void particleSystem::run(vector <ofPolyline> blobs){
         ofEnableAlphaBlending();
         bg_fbo.begin();
         ofFill();
-        ofSetColor(100,trails_amount);
+        ofSetColor(10,trails_amount);
         ofDrawRectangle(0,0,ofw,ofh);
         bg_fbo.end();
     }
