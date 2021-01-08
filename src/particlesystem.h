@@ -33,12 +33,14 @@ public:
     float velocity_y;
 
     ofImage drop_image;
+    ofFbo bg_fbo;
 
 
     ofTrueTypeFont agua_font;
     string agua_text, explosion_text;
     ofxBox2dParticleSystem * water_particles;
     int max_water_drops;
+    int trails_amount;
 
     b2ParticleDef water_pd;
 
