@@ -16,7 +16,8 @@ int main( ){
     mainSetting.decorated = false;
     mainSetting.windowMode = OF_WINDOW;
     #endif
-    mainSetting.setSize(1280, 720);
+    //this defines the realsense2 resoluation and size of the drop, everything
+    mainSetting.setSize(640, 480);
     mainSetting.setPosition(ofVec2f(0, 0));
 
     //mainSetting.numSamples = 8;´

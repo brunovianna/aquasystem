@@ -18,14 +18,18 @@ void ofApp::setup(){
 
     //playback from file - uncomment below
     //rs2::config cfg;
-    //cfg.enable_device_from_file("data/b.bag");
+    //cfg.enable_device_from_file("data/a.bag");
     //pipe.start(cfg); //File will be opened in read mode at this point
 
 
     //live cam -- uncomment below
-    pipe.start();
+    rs2::config cfg;
+    if (ofw==640)
+      cfg.enable_stream(RS2_STREAM_DEPTH, 640, 480, RS2_FORMAT_Z16, 30);
+    cfg.disable_stream(RS2_STREAM_COLOR);
+    //device = pipe.get_active_profile().get_device();
+    pipe.start(cfg);
 
-    device = pipe.get_active_profile().get_device();
 
     // filter settings
     thr_filter.set_option(RS2_OPTION_MIN_DISTANCE, depth_clipping_distance_near);
@@ -43,9 +47,11 @@ void ofApp::setup(){
     //box2d.createBounds();
 
     //(b2World * _b2world, int _maxCount, float _lifetime, float _radius, float _particleSize, ofColor _color){
-    water_particles.setup(box2d.getWorld(),1000,1000,2.f,3.f,ofColor(161,200,226));
-
-    // water_particles.loadImage("drop_circle_a.png");
+    if (ofw==1280)
+      water_particles.setup(box2d.getWorld(),1000,1000,2.f,3.f,ofColor(161,200,226));
+    else
+      water_particles.setup(box2d.getWorld(),1000,1000,1.f,1.5f,ofColor(161,200,226));
+  // water_particles.loadImage("drop_circle_a.png");
     //particles.setRadius(5.f);
 
     ps.water_particles = &water_particles;
@@ -81,15 +87,15 @@ void ofApp::update(){
 
 
     rs2::depth_frame  depth = frame_set.get_depth_frame();
-    rs2::video_frame  cam = frame_set.get_color_frame();
+    //rs2::video_frame  cam = frame_set.get_color_frame();
     depth = thr_filter.process(depth);
     rs2::video_frame depth_image = _colorizer.colorize(depth);
 
 
 
 
-    //Only process if one of them is unavailable
-    if (depth && cam)
+    //Only process if available
+    if (depth )
     {
 
         int depthWidth = depth_image.get_width();
@@ -219,8 +225,8 @@ void ofApp::draw(){
     roboto_gui.drawString ("Rastro: "+to_string(trails_amount)+"  (z/x para cambiar)", 20,140);
     roboto_gui.drawString ("Distancia mínima: "+to_string(depth_clipping_distance_near)+"  (t/y para cambiar)", 20,170);
     roboto_gui.drawString ("Distancia máxima: "+to_string(depth_clipping_distance_far)+"  (g/h para cambiar)", 20,200);
-    roboto_gui.drawString (to_string(ofGetFrameRate())+"/"+to_string(ofGetTargetFrameRate())+" fps", ofw-200,20);
-    roboto_gui.drawString (to_string(water_particles.getParticleCount())+" gotas azules", ofw-200,40);
+    roboto_gui.drawString (to_string(ofGetFrameRate())+"/"+to_string(ofGetTargetFrameRate())+" fps", ofw-200,ofh-40);
+    roboto_gui.drawString (to_string(water_particles.getParticleCount())+" gotas azules", ofw-200,ofh-20);
     ofSetColor(ofColor::white);
   }
 
